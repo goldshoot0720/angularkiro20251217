@@ -17,7 +17,8 @@ export interface ImageItem {
   providedIn: 'root'
 })
 export class ImageService {
-  private readonly imageBasePath = '/images/';
+  private readonly imageBasePath = '/assets/images/';
+  private readonly fallbackImagePath = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5YTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWcluePh+eEoeazleWKoOi8iDwvdGV4dD48L3N2Zz4=';
   
   // 實時更新的圖片列表
   private imagesSubject = new BehaviorSubject<ImageItem[]>([]);
@@ -508,6 +509,26 @@ export class ImageService {
     
     this.imagesSubject.next(updatedImages);
     this.updateStats(updatedImages);
+  }
+
+  // 新增方法：檢查圖片是否可用
+  checkImageAvailability(imagePath: string): Promise<boolean> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = imagePath;
+    });
+  }
+
+  // 新增方法：獲取圖片路徑（帶備用方案）
+  getImagePath(imageName: string): string {
+    return this.imageBasePath + imageName;
+  }
+
+  // 新增方法：獲取備用圖片
+  getFallbackImage(): string {
+    return this.fallbackImagePath;
   }
 
   getImagesByCategory(category: string): ImageItem[] {

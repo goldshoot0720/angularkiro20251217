@@ -157,12 +157,23 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
                (click)="openImageModal(image)">
             
             <!-- 圖片容器 -->
-            <div class="aspect-square overflow-hidden bg-gray-100">
+            <div class="aspect-square overflow-hidden bg-gray-100 relative">
+              <!-- 載入指示器 -->
+              <div class="absolute inset-0 flex items-center justify-center bg-gray-200">
+                <div class="animate-pulse text-gray-400">
+                  <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- 實際圖片 -->
               <img 
                 [src]="image.path" 
                 [alt]="image.name"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300 opacity-0"
                 (error)="onImageError($event)"
+                (load)="onImageLoad($event)"
                 loading="lazy">
             </div>
             
@@ -351,6 +362,12 @@ export class HomeComponent implements OnInit {
   }
 
   onImageError(event: any) {
-    event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5YTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWcluePh+eEoeazleWKoOi8iDwvdGV4dD48L3N2Zz4=';
+    console.warn('圖片載入失敗:', event.target.src);
+    event.target.src = this.imageService.getFallbackImage();
+    event.target.classList.add('image-error');
+  }
+
+  onImageLoad(event: any) {
+    event.target.classList.add('image-loaded');
   }
 }

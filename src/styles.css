@@ -155,3 +155,34 @@ video::-webkit-media-controls-panel {
   50% { transform: scale(1.05); }
   100% { transform: scale(1); }
 }
+
+/* 圖片載入狀態 */
+.image-loaded {
+  opacity: 1 !important;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.image-error {
+  opacity: 1 !important;
+  filter: grayscale(100%);
+}
+
+/* 圖片容器優化 */
+.aspect-square img {
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 圖片懸停效果 */
+.group:hover .image-loaded {
+  transform: scale(1.05);
+}
+
+/* 載入動畫 */
+@keyframes imageLoad {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.image-loaded {
+  animation: imageLoad 0.3s ease-out;
+}
