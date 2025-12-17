@@ -58,5 +58,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/simple-test/simple-test.component').then(m => m.SimpleTestComponent),
     title: '簡單測試'
   },
+  { 
+    path: 'image-test', 
+    loadComponent: () => import('./components/image-test/image-test.component').then(m => m.ImageTestComponent),
+    title: '圖片測試'
+  },
   { path: '**', redirectTo: '/home' }
 ];

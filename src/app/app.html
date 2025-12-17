@@ -1,5 +1,5 @@
 <!-- 響應式布局：適應不同縮放級別 -->
-<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+<div class="min-h-screen bg-gray-50">
 
 <!-- 手機版和小屏幕：頂部導航 -->
 <div class="block lg:hidden">
@@ -81,11 +81,11 @@
             <span class="text-2xl mb-2">🧪</span>
             <span class="text-sm font-medium text-green-700">簡單測試</span>
           </a>
-          <a routerLink="/responsive-demo" 
+          <a routerLink="/image-test" 
              (click)="closeMobileMenu()"
              class="flex flex-col items-center p-4 bg-purple-50 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
-            <span class="text-2xl mb-2">📱</span>
-            <span class="text-sm font-medium text-purple-700">響應式展示</span>
+            <span class="text-2xl mb-2">🖼️</span>
+            <span class="text-sm font-medium text-purple-700">圖片測試</span>
           </a>
         </div>
         
@@ -220,12 +220,12 @@
   </aside>
   
   <!-- 右側內容區域 - 現代化設計，支持100%-150%缩放 -->
-  <main class="flex-1 ml-56 lg:ml-60 xl:ml-64 2xl:ml-72 min-h-screen bg-white">
+  <main class="flex-1 ml-56 lg:ml-60 xl:ml-64 2xl:ml-72 bg-white">
     <!-- 頂部裝飾條 -->
     <div class="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
     
     <!-- 內容區域 - 響應式內邊距 -->
-    <div class="p-4 lg:p-6 xl:p-8 min-h-screen">
+    <div class="p-4 lg:p-6 xl:p-8">
       <router-outlet />
     </div>
   </main>
