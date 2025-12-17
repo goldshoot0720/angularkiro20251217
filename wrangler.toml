@@ -1,43 +1,26 @@
-name = "my-angular-app"
-main = "src/main.ts"
+# Cloudflare Pages configuration
+name = "angularkiro20251217"
 compatibility_date = "2024-12-17"
+
+# Pages build configuration
+pages_build_output_dir = "dist/angularkiro20251217/browser"
 
 [build]
 command = "npm run build"
-cwd = "."
 
-[env.production]
-name = "my-angular-app-production"
-
-[env.staging]
-name = "my-angular-app-staging"
-
-# Static assets configuration
-[site]
-bucket = "./dist"
-entry-point = "workers-site"
-
-# Environment variables (add your own as needed)
+# Environment variables
 [vars]
-ENVIRONMENT = "development"
+ENVIRONMENT = "production"
 
-# KV namespaces (uncomment and configure if needed)
-# [[kv_namespaces]]
-# binding = "MY_KV_NAMESPACE"
-# id = "your-kv-namespace-id"
-# preview_id = "your-preview-kv-namespace-id"
+# Custom headers for SPA routing
+[[headers]]
+for = "/*"
+[headers.values]
+X-Frame-Options = "DENY"
+X-Content-Type-Options = "nosniff"
 
-# R2 buckets (uncomment and configure if needed)
-# [[r2_buckets]]
-# binding = "MY_BUCKET"
-# bucket_name = "my-bucket"
-
-# Durable Objects (uncomment and configure if needed)
-# [[durable_objects.bindings]]
-# name = "MY_DURABLE_OBJECT"
-# class_name = "MyDurableObject"
-
-# Routes (uncomment and configure for custom domains)
-# routes = [
-#   { pattern = "example.com/*", zone_name = "example.com" }
-# ]
+# SPA fallback for Angular routing
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
