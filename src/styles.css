@@ -12,7 +12,36 @@
 body {
   font-family: 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
   background-color: #f5f5f5;
-  color: #333;
+  color: #1f2937 !important; /* 确保深色文本 */
+}
+
+/* 强制确保所有文本元素可见 */
+* {
+  color: inherit;
+}
+
+/* 确保主要内容区域文本可见 */
+main, .main-content, router-outlet {
+  color: #1f2937 !important;
+}
+
+/* 确保卡片和容器内文本可见 */
+.bg-white, .bg-gray-50, .bg-gray-100, .bg-opacity-95 {
+  color: #1f2937 !important;
+}
+
+/* 确保所有文本标签可见 */
+p, span, div, h1, h2, h3, h4, h5, h6, label, a {
+  color: inherit !important;
+}
+
+/* 特殊情况：确保浅色背景上的文本 */
+.text-gray-600, .text-gray-700, .text-gray-800 {
+  color: #374151 !important;
+}
+
+.text-gray-500 {
+  color: #6b7280 !important;
 }
 
 /* 中文字體優化 */

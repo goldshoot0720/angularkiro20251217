@@ -40,16 +40,16 @@ import { takeUntil } from 'rxjs/operators';
       <app-responsive-card title="圖片路徑測試" class="mb-6">
         <app-responsive-grid [mobileColumns]="2" [tabletColumns]="4" [desktopColumns]="4">
           <div class="text-center">
-            <p class="text-xs md:text-sm mb-2">Assets 路徑</p>
-            <img src="/assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="responsive-img-square border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+            <p class="text-xs md:text-sm mb-2">Images 路徑</p>
+            <img src="/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="responsive-img-square border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
           <div class="text-center">
             <p class="text-xs md:text-sm mb-2">Public 路徑</p>
             <img src="/test-image-direct.png" alt="測試圖片" class="responsive-img-square border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
           <div class="text-center">
-            <p class="text-xs md:text-sm mb-2">相對 Assets</p>
-            <img src="assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="responsive-img-square border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+            <p class="text-xs md:text-sm mb-2">相對 Images</p>
+            <img src="images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="responsive-img-square border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
           <div class="text-center">
             <p class="text-xs md:text-sm mb-2">備用圖片</p>
@@ -194,7 +194,7 @@ import { takeUntil } from 'rxjs/operators';
             <div class="aspect-square overflow-hidden bg-gray-100 relative">
               <!-- 實際圖片 -->
               <img 
-                src="/assets/images/{{ image.name }}" 
+                src="/images/{{ image.name }}" 
                 [alt]="image.name"
                 class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300"
                 (error)="onImageError($event)"

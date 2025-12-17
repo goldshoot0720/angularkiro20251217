@@ -1,0 +1,38 @@
+/* 导入响应式缩放样式 */
+@import './responsive-zoom.css';
+
+/* 应用全局样式 */
+* {
+  box-sizing: border-box;
+}
+
+/* 确保在不同缩放级别下的平滑过渡 */
+.sidebar,
+.main-content {
+  transition: all 0.3s ease-in-out;
+}
+
+/* 确保文本对比度和可读性 */
+body, .main-content {
+  color: #1f2937; /* 深灰色文本 */
+}
+
+/* 确保所有文本元素有足够的对比度 */
+p, span, div, h1, h2, h3, h4, h5, h6 {
+  color: inherit;
+}
+
+/* 特别确保浅色背景上的文本可见性 */
+.bg-white, .bg-gray-50, .bg-gray-100 {
+  color: #1f2937 !important;
+}
+
+/* 确保卡片内容可见性 */
+.responsive-card {
+  background-color: #ffffff !important;
+  color: #1f2937 !important;
+}
+
+.responsive-card * {
+  color: inherit;
+}

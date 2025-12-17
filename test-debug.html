@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angular 應用調試</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .debug-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            margin: 10px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Angular 應用調試頁面</h1>
+    
+    <div class="debug-section">
+        <h2>1. 應用狀態檢查</h2>
+        <p class="info">Angular 開發服務器運行在: <a href="http://localhost:4200" target="_blank">http://localhost:4200</a></p>
+        <p>請檢查以下項目：</p>
+        <ul>
+            <li>左側導航欄是否顯示</li>
+            <li>右側內容區域是否為空白</li>
+            <li>瀏覽器控制台是否有錯誤信息</li>
+        </ul>
+    </div>
+
+    <div class="debug-section">
+        <h2>2. 圖片路徑測試</h2>
+        <p>測試不同的圖片路徑是否可以正常載入：</p>
+        
+        <div>
+            <h3>/images/ 路徑 (修復後)</h3>
+            <img src="/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片1" class="test-image" 
+                 onload="this.nextElementSibling.innerHTML='✅ 載入成功'" 
+                 onerror="this.nextElementSibling.innerHTML='❌ 載入失敗'">
+            <span class="info">載入中...</span>
+        </div>
+
+        <div>
+            <h3>/assets/images/ 路徑 (原始)</h3>
+            <img src="/assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片2" class="test-image" 
+                 onload="this.nextElementSibling.innerHTML='✅ 載入成功'" 
+                 onerror="this.nextElementSibling.innerHTML='❌ 載入失敗'">
+            <span class="info">載入中...</span>
+        </div>
+
+        <div>
+            <h3>Public 測試圖片</h3>
+            <img src="/test-image-direct.png" alt="測試圖片3" class="test-image" 
+                 onload="this.nextElementSibling.innerHTML='✅ 載入成功'" 
+                 onerror="this.nextElementSibling.innerHTML='❌ 載入失敗'">
+            <span class="info">載入中...</span>
+        </div>
+    </div>
+
+    <div class="debug-section">
+        <h2>3. 可能的問題和解決方案</h2>
+        <h3>已修復的問題：</h3>
+        <ul class="success">
+            <li>✅ 圖片服務路徑從 /assets/images/ 改為 /images/</li>
+            <li>✅ 首頁組件圖片路徑已更新</li>
+            <li>✅ Angular 應用構建成功</li>
+        </ul>
+
+        <h3>如果右側仍然空白，請檢查：</h3>
+        <ul>
+            <li>瀏覽器控制台是否有 JavaScript 錯誤</li>
+            <li>網絡標籤是否有資源載入失敗</li>
+            <li>路由是否正確配置</li>
+            <li>組件是否正確導入</li>
+        </ul>
+
+        <h3>調試步驟：</h3>
+        <ol>
+            <li>打開瀏覽器開發者工具 (F12)</li>
+            <li>查看 Console 標籤的錯誤信息</li>
+            <li>查看 Network 標籤的資源載入狀態</li>
+            <li>查看 Elements 標籤的 DOM 結構</li>
+        </ol>
+    </div>
+
+    <div class="debug-section">
+        <h2>4. 快速測試</h2>
+        <button onclick="testAngularApp()">測試 Angular 應用</button>
+        <div id="test-result"></div>
+    </div>
+
+    <script>
+        function testAngularApp() {
+            const resultDiv = document.getElementById('test-result');
+            resultDiv.innerHTML = '<p class="info">正在測試...</p>';
+            
+            // 測試 Angular 應用是否響應
+            fetch('http://localhost:4200')
+                .then(response => {
+                    if (response.ok) {
+                        resultDiv.innerHTML = '<p class="success">✅ Angular 應用運行正常</p>';
+                    } else {
+                        resultDiv.innerHTML = '<p class="error">❌ Angular 應用響應異常</p>';
+                    }
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = '<p class="error">❌ 無法連接到 Angular 應用</p>';
+                });
+        }
+
+        // 頁面載入時自動測試
+        window.onload = function() {
+            console.log('調試頁面已載入');
+            console.log('請檢查 Angular 應用: http://localhost:4200');
+        };
+    </script>
+</body>
+</html>

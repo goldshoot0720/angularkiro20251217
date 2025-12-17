@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>应用状态检查</title>
+    <style>
+        body { font-family: 'Microsoft JhengHei', sans-serif; margin: 20px; }
+        .status { padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; }
+        .info { background: #d1ecf1; border: 1px solid #bee5eb; color: #0c5460; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Angular 应用状态检查</h1>
+    
+    <div class="status success">
+        <h3>✅ 开发服务器状态</h3>
+        <p>Angular 开发服务器运行在: <a href="http://localhost:4200" target="_blank">http://localhost:4200</a></p>
+        <p>构建状态: 成功</p>
+    </div>
+
+    <div class="status info">
+        <h3>📋 当前配置</h3>
+        <ul>
+            <li>布局: 左侧导航栏 + 右侧内容</li>
+            <li>路由: 直接使用 router-outlet</li>
+            <li>图片路径: /images/ (已修复)</li>
+            <li>响应式组件: 已移除复杂组件</li>
+        </ul>
+    </div>
+
+    <div class="status warning">
+        <h3>⚠️ 如果页面仍然有问题</h3>
+        <ol>
+            <li>清除浏览器缓存 (Ctrl+Shift+R)</li>
+            <li>检查浏览器控制台错误</li>
+            <li>确认开发服务器正在运行</li>
+            <li>尝试访问其他路由 (如 /dashboard)</li>
+        </ol>
+    </div>
+
+    <div class="status info">
+        <h3>🧪 快速测试</h3>
+        <button onclick="testApp()">测试应用连接</button>
+        <div id="test-result" style="margin-top: 10px;"></div>
+    </div>
+
+    <script>
+        function testApp() {
+            const result = document.getElementById('test-result');
+            result.innerHTML = '<p style="color: blue;">正在测试...</p>';
+            
+            fetch('http://localhost:4200')
+                .then(response => {
+                    if (response.ok) {
+                        result.innerHTML = '<p style="color: green;">✅ 应用连接正常！</p>';
+                    } else {
+                        result.innerHTML = '<p style="color: red;">❌ 应用响应异常</p>';
+                    }
+                })
+                .catch(error => {
+                    result.innerHTML = '<p style="color: red;">❌ 无法连接到应用</p>';
+                });
+        }
+
+        // 页面加载时自动测试
+        window.onload = function() {
+            setTimeout(testApp, 1000);
+        };
+    </script>
+</body>
+</html>

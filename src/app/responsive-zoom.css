@@ -1,0 +1,155 @@
+/* 考虑缩放级别的响应式设计 (100% - 150% 优化) */
+
+/* 基础断点 */
+/* sm: 640px */
+/* md: 768px */
+/* lg: 1024px */
+/* xl: 1280px */
+/* 2xl: 1536px */
+
+/* 针对不同缩放级别的精确调整 */
+
+/* 100% 缩放 - 标准断点 (1024px+) */
+@media (min-width: 1024px) {
+  .zoom-desktop {
+    display: flex !important;
+  }
+  .zoom-mobile {
+    display: none !important;
+  }
+}
+
+/* 110% 缩放 - 轻微调整 (930px+) */
+@media (min-width: 930px) and (max-width: 1023px) {
+  .zoom-desktop-110 {
+    display: flex !important;
+  }
+  .zoom-mobile-110 {
+    display: none !important;
+  }
+}
+
+/* 125% 缩放 - 中等调整 (820px+) */
+@media (min-width: 820px) and (max-width: 929px) {
+  .zoom-desktop-125 {
+    display: flex !important;
+  }
+  .zoom-mobile-125 {
+    display: none !important;
+  }
+}
+
+/* 150% 缩放 - 较大调整 (680px+) */
+@media (min-width: 680px) and (max-width: 819px) {
+  .zoom-desktop-150 {
+    display: flex !important;
+  }
+  .zoom-mobile-150 {
+    display: none !important;
+  }
+}
+
+/* 小于680px - 强制手机版 (适用于所有缩放级别) */
+@media (max-width: 679px) {
+  .zoom-desktop,
+  .zoom-desktop-110,
+  .zoom-desktop-125,
+  .zoom-desktop-150 {
+    display: none !important;
+  }
+  .zoom-mobile,
+  .zoom-mobile-110,
+  .zoom-mobile-125,
+  .zoom-mobile-150 {
+    display: block !important;
+  }
+}
+
+/* 侧边栏宽度调整 - 针对100%-150%缩放优化 */
+@media (min-width: 1280px) {
+  .sidebar-responsive {
+    width: 18rem; /* 288px - 100% 缩放 */
+  }
+  .content-responsive {
+    margin-left: 18rem;
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .sidebar-responsive {
+    width: 16rem; /* 256px - 110% 缩放 */
+  }
+  .content-responsive {
+    margin-left: 16rem;
+  }
+}
+
+@media (min-width: 820px) and (max-width: 1023px) {
+  .sidebar-responsive {
+    width: 15rem; /* 240px - 125% 缩放 */
+  }
+  .content-responsive {
+    margin-left: 15rem;
+  }
+}
+
+@media (min-width: 680px) and (max-width: 819px) {
+  .sidebar-responsive {
+    width: 14rem; /* 224px - 150% 缩放 */
+  }
+  .content-responsive {
+    margin-left: 14rem;
+  }
+}
+
+/* 字体大小调整 - 针对100%-150%缩放优化 */
+@media (min-width: 1280px) {
+  .text-responsive-lg {
+    font-size: 1.125rem; /* 18px */
+  }
+  .text-responsive-xl {
+    font-size: 1.25rem; /* 20px */
+  }
+}
+
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .text-responsive-lg {
+    font-size: 1rem; /* 16px */
+  }
+  .text-responsive-xl {
+    font-size: 1.125rem; /* 18px */
+  }
+}
+
+@media (min-width: 820px) and (max-width: 1023px) {
+  .text-responsive-lg {
+    font-size: 0.95rem; /* 15.2px */
+  }
+  .text-responsive-xl {
+    font-size: 1.05rem; /* 16.8px */
+  }
+}
+
+@media (min-width: 680px) and (max-width: 819px) {
+  .text-responsive-lg {
+    font-size: 0.875rem; /* 14px */
+  }
+  .text-responsive-xl {
+    font-size: 1rem; /* 16px */
+  }
+}
+
+/* 间距调整 - 针对150%缩放优化 */
+@media (min-width: 680px) and (max-width: 819px) {
+  .sidebar .p-6 {
+    padding: 1.25rem; /* 减少内边距 */
+  }
+  
+  .sidebar nav .space-y-3 > * + * {
+    margin-top: 0.5rem; /* 减少菜单项间距 */
+  }
+  
+  .sidebar .mb-10 {
+    margin-bottom: 1.5rem; /* 减少logo区域下边距 */
+  }
+}
