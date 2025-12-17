@@ -85,9 +85,73 @@ body {
 /* 播放按鈕動畫 */
 .play-button {
   transition: all 0.3s ease-in-out;
+  backdrop-filter: blur(10px);
 }
 
 .play-button:hover {
   transform: scale(1.1);
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* 影片控制優化 */
+video {
+  outline: none;
+}
+
+video::-webkit-media-controls-panel {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* 影片載入狀態 */
+.video-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+/* 進度條動畫 */
+.progress-bar {
+  transition: width 0.3s ease-out;
+}
+
+/* 影片卡片懸停效果 */
+.video-card {
+  transition: all 0.3s ease-in-out;
+}
+
+.video-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 響應式影片播放器 */
+@media (max-width: 768px) {
+  .video-container {
+    height: 200px;
+  }
+  
+  .play-button {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* 影片品質標籤 */
+.quality-badge {
+  background: linear-gradient(45deg, #ff4757, #ff3838);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }

@@ -33,7 +33,7 @@ export class VideoService {
       title: '鋒兄的傳奇人生',
       description: '一個關於愛與勇氣的故事，展現了鋒兄平凡卻不平凡的人生歷程。從普通人到傳奇的蛻變過程，充滿了感動與啟發。',
       duration: '15:32',
-      url: 'https://pub-c89792336046495e89758a0a802e15c8.r2.dev/analogkiro20251216/19700121-1829-693fee512bec81918cbfd484c6a5ba8f_enx4rsS0.mp4',
+      url: 'https://pub-c89792336046495e89758a0a802e15c8.r2.dev/angularkiro20251217/19700121-1829-693fee512bec81918cbfd484c6a5ba8f_enx4rsS0.mp4',
       thumbnailUrl: '/images/ChatGPT Image 2025年12月17日 下午01_23_17.png',
       views: '2.5萬',
       likes: '1.8K',
@@ -47,7 +47,7 @@ export class VideoService {
       title: '鋒兄進化Show 🔥',
       description: '鋒兄最新的成長軌跡，展現驚人的進化歷程。從技術提升到人生感悟，每一步都充滿驚喜與成長。',
       duration: '12:45',
-      url: 'https://pub-c89792336046495e89758a0a802e15c8.r2.dev/analogkiro20251216/clideo-editor-92eb6755d77b4603a482c25764865a58_7sLjgTgc.mp4',
+      url: 'https://pub-c89792336046495e89758a0a802e15c8.r2.dev/angularkiro20251217/clideo-editor-92eb6755d77b4603a482c25764865a58_7sLjgTgc.mp4',
       thumbnailUrl: '/images/ChatGPT Image 2025年12月17日 下午01_28_57.png',
       views: '1.9萬',
       likes: '1.2K',
@@ -88,7 +88,14 @@ export class VideoService {
       
       // 添加小延遲以提供更平滑的載入體驗
       return timer(200).pipe(
-        map(() => video.url),
+        map(() => {
+          // 確保 URL 有效性
+          if (this.isValidVideoUrl(video.url)) {
+            return video.url;
+          } else {
+            throw new Error('無效的影片 URL');
+          }
+        }),
         catchError(error => {
           console.error('播放影片時發生錯誤:', error);
           return of('');
@@ -98,10 +105,45 @@ export class VideoService {
     
     return of('').pipe(
       catchError(error => {
-        console.error('播放影片時發生錯誤:', error);
+        console.error('找不到指定的影片:', error);
         return of('');
       })
     );
+  }
+
+  // 檢查影片 URL 是否有效
+  private isValidVideoUrl(url: string): boolean {
+    try {
+      const urlObj = new URL(url);
+      return urlObj.protocol === 'https:' && url.includes('.mp4');
+    } catch {
+      return false;
+    }
+  }
+
+  // 預載入影片
+  preloadVideo(videoId: number): Observable<boolean> {
+    const video = this.videoList.find(v => v.id === videoId);
+    if (!video) {
+      return of(false);
+    }
+
+    return new Observable(observer => {
+      const videoElement = document.createElement('video');
+      videoElement.preload = 'metadata';
+      
+      videoElement.onloadedmetadata = () => {
+        observer.next(true);
+        observer.complete();
+      };
+      
+      videoElement.onerror = () => {
+        observer.next(false);
+        observer.complete();
+      };
+      
+      videoElement.src = video.url;
+    });
   }
 
 

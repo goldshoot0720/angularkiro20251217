@@ -17,7 +17,7 @@ import { Subscription } from 'rxjs';
 
       <!-- 影片網格 -->
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        <div *ngFor="let video of videos; let i = index" class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow relative">
+        <div *ngFor="let video of videos; let i = index" class="video-card bg-white rounded-lg shadow-lg overflow-hidden relative">
           <!-- 觀看進度指示器 -->
           <div class="absolute top-2 right-2 z-10 flex space-x-2">
             <div *ngIf="video.watchProgress && video.watchProgress > 0" 
@@ -30,10 +30,11 @@ import { Subscription } from 'rxjs';
           <div class="video-container relative bg-gray-900 h-64">
             <!-- 載入指示器 -->
             <div *ngIf="loadingVideo() === video.id" 
-                 class="video-loading">
+                 class="video-loading-overlay">
               <div class="flex flex-col items-center text-white">
-                <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-3"></div>
-                <p class="text-sm loading-pulse">載入中...</p>
+                <div class="animate-spin rounded-full h-16 w-16 border-4 border-white border-t-transparent mb-4"></div>
+                <p class="text-lg font-medium loading-pulse">載入影片中...</p>
+                <p class="text-sm opacity-75 mt-1">請稍候片刻</p>
               </div>
             </div>
 
@@ -73,7 +74,7 @@ import { Subscription } from 'rxjs';
                 <div class="absolute top-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm transition-all duration-200">
                   {{ video.duration }}
                 </div>
-                <div class="absolute top-4 left-4 bg-red-500 text-white px-2 py-1 rounded text-xs font-bold transition-all duration-200">
+                <div class="absolute top-4 left-4 quality-badge text-white px-2 py-1 rounded text-xs font-bold">
                   {{ video.quality }}
                 </div>
                 
@@ -85,8 +86,8 @@ import { Subscription } from 'rxjs';
                 
                 <!-- 觀看進度條 -->
                 <div *ngIf="video.watchProgress && video.watchProgress > 0" 
-                     class="absolute bottom-0 left-0 right-0 h-1 bg-gray-600">
-                  <div class="h-full bg-red-500 transition-all" 
+                     class="absolute bottom-0 left-0 right-0 h-2 bg-gray-600 bg-opacity-50">
+                  <div class="progress-bar h-full bg-gradient-to-r from-red-500 to-red-400" 
                        [style.width.%]="video.watchProgress"></div>
                 </div>
               </div>
@@ -310,19 +311,41 @@ export class VideoIntroComponent implements OnInit, OnDestroy {
       // 設置載入狀態
       this.loadingVideo.set(videoId);
       
-      // 使用影片服務播放
-      this.videoService.playVideo(videoId).subscribe(url => {
-        if (url) {
-          this.currentVideoUrl.set(url);
-          // 延遲設置播放狀態，讓載入動畫有時間顯示
-          setTimeout(() => {
-            this.playingVideo.set(videoId);
-          }, 300);
+      // 預載入影片
+      this.videoService.preloadVideo(videoId).subscribe(canPlay => {
+        if (canPlay) {
+          // 使用影片服務播放
+          this.videoService.playVideo(videoId).subscribe({
+            next: (url) => {
+              if (url) {
+                this.currentVideoUrl.set(url);
+                // 延遲設置播放狀態，讓載入動畫有時間顯示
+                setTimeout(() => {
+                  this.playingVideo.set(videoId);
+                  this.loadingVideo.set(null);
+                }, 500);
+              } else {
+                this.loadingVideo.set(null);
+                this.showError('影片載入失敗，請檢查網路連線');
+              }
+            },
+            error: (error) => {
+              console.error('播放影片時發生錯誤:', error);
+              this.loadingVideo.set(null);
+              this.showError('影片播放失敗，請稍後再試');
+            }
+          });
         } else {
           this.loadingVideo.set(null);
+          this.showError('影片無法載入，請檢查網路連線或稍後再試');
         }
       });
     }
+  }
+
+  private showError(message: string) {
+    // 可以替換為更好的錯誤提示組件
+    alert(message);
   }
 
   // 影片播放事件處理
