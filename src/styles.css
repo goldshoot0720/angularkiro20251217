@@ -1,3 +1,93 @@
-/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 全局樣式 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* 中文字體優化 */
+.chinese-font {
+  font-family: 'Microsoft JhengHei', 'PingFang TC', 'Noto Sans TC', sans-serif;
+}
+
+/* 自定義滾動條 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
 
 @import "tailwindcss";
+
+/* 影片載入優化 */
+.video-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.video-container video {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.video-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+/* 平滑的載入動畫 */
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.loading-pulse {
+  animation: fadeInOut 1.5s ease-in-out infinite;
+}
+
+/* 影片縮圖懸停效果 */
+.video-thumbnail {
+  transition: transform 0.2s ease-in-out;
+}
+
+.video-thumbnail:hover {
+  transform: scale(1.02);
+}
+
+/* 播放按鈕動畫 */
+.play-button {
+  transition: all 0.3s ease-in-out;
+}
+
+.play-button:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.3);
+}

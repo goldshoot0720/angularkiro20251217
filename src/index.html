@@ -1,13 +1,32 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
   <meta charset="utf-8">
-  <title>Angularkiro20251217</title>
+  <title>鋒兄AI管理系統</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="鋒兄AI管理系統 - 訂閱管理、食品管理等功能">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <!-- SPA 優化 -->
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#3B82F6">
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <!-- 載入中的提示 -->
+    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Microsoft JhengHei', sans-serif;">
+      <div style="text-align: center;">
+        <div style="width: 50px; height: 50px; border: 3px solid #f3f3f3; border-top: 3px solid #3B82F6; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px;"></div>
+        <p style="color: #666; font-size: 16px;">載入中...</p>
+      </div>
+    </div>
+    <style>
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    </style>
+  </app-root>
 </body>
 </html>

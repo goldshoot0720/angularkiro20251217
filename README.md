@@ -1,59 +1,123 @@
-# Angularkiro20251217
+# 鋒兄AI管理系統
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+基於 Angular 21 和 Nhost 後端的現代化管理系統，提供完整的數據管理和可視化功能。
 
-## Development server
+## 功能特色
 
-To start a local development server, run:
+### 🏠 儀表板
+- 實時數據統計展示
+- 會員項目、訂閱服務、營業額等關鍵指標
+- 食品管理和訂閱管理統計分析
 
+### 🖼️ 圖片展示
+- 支援多種圖片格式 (JPG/JPEG, PNG)
+- 圖片分類和統計
+- 批量上傳和管理功能
+
+### 🍽️ 食品管理
+- 食品庫存管理
+- 有效期限追蹤
+- 過期提醒系統
+- 數量調整和編輯功能
+
+### 📋 訂閱管理
+- 訂閱服務追蹤
+- 付款日期管理
+- 月費統計和分析
+- 服務網站快速連結
+
+### 🎬 影片介紹
+- 影片內容展示
+- 播放和下載功能
+- 熱門影片推薦
+
+### ℹ️ 關於我們
+- 團隊介紹
+- 服務特色展示
+- 聯絡資訊
+
+## 技術棧
+
+- **前端**: Angular 21 + TypeScript
+- **後端**: Nhost (GraphQL + PostgreSQL)
+- **樣式**: Tailwind CSS
+- **部署**: 支援 SSR (Server-Side Rendering)
+
+## 開發環境設置
+
+### 前置需求
+- Node.js 18+ 
+- npm 或 yarn
+
+### 安裝依賴
 ```bash
-ng serve
+npm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+### 環境配置
+確保 `.env` 文件包含正確的 Nhost 配置：
+```
+NHOST_SUBDOMAIN=uxgwdiuehabbzenwtcqo
+NHOST_REGION=eu-central-1
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+### 啟動開發服務器
 ```bash
-ng generate --help
+npm start
 ```
 
-## Building
+應用程式將在 `http://localhost:4200/` 運行
 
-To build the project run:
+## 項目結構
 
-```bash
-ng build
+```
+src/
+├── app/
+│   ├── components/          # 頁面組件
+│   │   ├── dashboard/       # 儀表板
+│   │   ├── gallery/         # 圖片展示
+│   │   ├── food-management/ # 食品管理
+│   │   ├── subscription-management/ # 訂閱管理
+│   │   ├── video-intro/     # 影片介紹
+│   │   ├── about/           # 關於我們
+│   │   └── sidebar/         # 側邊欄導航
+│   ├── services/            # 服務層
+│   │   └── nhost.service.ts # Nhost 後端服務
+│   ├── app.routes.ts        # 路由配置
+│   └── app.ts              # 主應用組件
+└── styles.css              # 全局樣式
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 構建部署
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
+### 開發構建
 ```bash
-ng test
+npm run build
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
+### 生產構建
 ```bash
-ng e2e
+npm run build --configuration=production
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### SSR 服務器
+```bash
+npm run serve:ssr:angularkiro20251217
+```
 
-## Additional Resources
+## 主要功能
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. **響應式設計**: 支援桌面和移動設備
+2. **中文本地化**: 完整的繁體中文界面
+3. **實時數據**: 與 Nhost 後端實時同步
+4. **模組化架構**: 易於擴展和維護
+5. **現代化 UI**: 使用 Tailwind CSS 構建美觀界面
+
+## 開發團隊
+
+- **鋒兄**: 技術總監 & 創辦人
+- **塗哥**: 營運總監 & 共同創辦人
+
+## 版權資訊
+
+© 2025-2125 鋒兄塗哥公開資訊 版權所有
