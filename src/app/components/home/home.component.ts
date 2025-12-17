@@ -22,6 +22,29 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
         </div>
       </div>
 
+      <!-- 圖片路徑測試 -->
+      <div class="bg-white rounded-lg p-4 mb-6">
+        <h3 class="text-lg font-semibold mb-4">圖片路徑測試</h3>
+        <div class="grid grid-cols-4 gap-4">
+          <div class="text-center">
+            <p class="text-sm mb-2">Assets 路徑</p>
+            <img src="/assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+          </div>
+          <div class="text-center">
+            <p class="text-sm mb-2">Public 路徑</p>
+            <img src="/test-image-direct.png" alt="測試圖片" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+          </div>
+          <div class="text-center">
+            <p class="text-sm mb-2">相對 Assets</p>
+            <img src="assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+          </div>
+          <div class="text-center">
+            <p class="text-sm mb-2">備用圖片</p>
+            <img [src]="imageService.getFallbackImage()" alt="備用圖片" class="w-20 h-20 object-cover mx-auto border">
+          </div>
+        </div>
+      </div>
+
       <!-- 圖片展示區域 -->
       <div class="mb-6">
         <div class="flex justify-between items-center mb-4">
