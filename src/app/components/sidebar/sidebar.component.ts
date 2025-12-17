@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,48 +20,53 @@ import { RouterModule } from '@angular/router';
         </div>
         
         <nav class="space-y-2">
-          <a routerLink="/home" 
-             routerLinkActive="bg-blue-500 text-white" 
-             class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors">
+          <button (click)="navigateTo('/home')" 
+                  [class.bg-blue-500]="isActive('/home')"
+                  [class.text-white]="isActive('/home')"
+                  class="w-full flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors text-left">
             <span class="mr-3">🏠</span>
             <span>首頁</span>
-          </a>
+          </button>
           
-          <a routerLink="/dashboard" 
-             routerLinkActive="bg-blue-500 text-white" 
-             class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors">
+          <button (click)="navigateTo('/dashboard')" 
+                  [class.bg-blue-500]="isActive('/dashboard')"
+                  [class.text-white]="isActive('/dashboard')"
+                  class="w-full flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors text-left">
             <span class="mr-3">📊</span>
             <span>儀表板</span>
-          </a>
+          </button>
           
-          <a routerLink="/subscription-management" 
-             routerLinkActive="bg-blue-500 text-white" 
-             class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors">
+          <button (click)="navigateTo('/subscription-management')" 
+                  [class.bg-blue-500]="isActive('/subscription-management')"
+                  [class.text-white]="isActive('/subscription-management')"
+                  class="w-full flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors text-left">
             <span class="mr-3">📋</span>
             <span>訂閱管理</span>
-          </a>
+          </button>
           
-          <a routerLink="/food-management" 
-             routerLinkActive="bg-blue-500 text-white" 
-             class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors">
+          <button (click)="navigateTo('/food-management')" 
+                  [class.bg-blue-500]="isActive('/food-management')"
+                  [class.text-white]="isActive('/food-management')"
+                  class="w-full flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors text-left">
             <span class="mr-3">🍽️</span>
             <span>食品管理</span>
-          </a>
+          </button>
           
-          <a routerLink="/video-intro" 
-             routerLinkActive="bg-blue-500 text-white" 
-             class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors">
+          <button (click)="navigateTo('/video-intro')" 
+                  [class.bg-blue-500]="isActive('/video-intro')"
+                  [class.text-white]="isActive('/video-intro')"
+                  class="w-full flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors text-left">
             <span class="mr-3">🎬</span>
             <span>影片介紹</span>
-          </a>
+          </button>
           
-          
-          <a routerLink="/about" 
-             routerLinkActive="bg-blue-500 text-white" 
-             class="flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors">
+          <button (click)="navigateTo('/about')" 
+                  [class.bg-blue-500]="isActive('/about')"
+                  [class.text-white]="isActive('/about')"
+                  class="w-full flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-blue-50 transition-colors text-left">
             <span class="mr-3">ℹ️</span>
             <span>關於我們</span>
-          </a>
+          </button>
         </nav>
       </div>
     </div>
@@ -72,4 +77,15 @@ import { RouterModule } from '@angular/router';
     }
   `]
 })
-export class SidebarComponent {}
+export class SidebarComponent {
+  constructor(private router: Router) {}
+
+  navigateTo(route: string) {
+    // 直接導航到目標路由
+    this.router.navigate([route]);
+  }
+
+  isActive(route: string): boolean {
+    return this.router.url === route;
+  }
+}

@@ -184,6 +184,25 @@ import { Subscription } from 'rxjs';
         </div>
       </div>
 
+      <!-- 測試圖片 -->
+      <div class="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+        <h3 class="text-lg font-semibold mb-2">路徑測試</h3>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="text-center">
+            <p class="text-sm mb-2">測試圖片 (根路徑)</p>
+            <img src="/test-image.png" alt="測試圖片" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+          </div>
+          <div class="text-center">
+            <p class="text-sm mb-2">圖片目錄</p>
+            <img src="/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片2" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+          </div>
+          <div class="text-center">
+            <p class="text-sm mb-2">相對路徑</p>
+            <img src="./images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片3" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+          </div>
+        </div>
+      </div>
+
       <!-- 圖片網格 -->
       <div class="mb-4">
         <p class="text-gray-600">顯示 {{ filteredImages().length }} 張圖片</p>
@@ -201,6 +220,7 @@ import { Subscription } from 'rxjs';
               [alt]="image.name"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               (error)="onImageError($event)"
+              (load)="onImageLoad($event)"
               loading="lazy">
           </div>
           
@@ -262,6 +282,10 @@ export class GalleryComponent implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.imageService.getImagesStream().subscribe(images => {
         this.images = images;
+        console.log('載入圖片數量:', images.length);
+        if (images.length > 0) {
+          console.log('第一張圖片路徑:', images[0].path);
+        }
       })
     );
     
@@ -357,7 +381,12 @@ export class GalleryComponent implements OnInit, OnDestroy {
   }
 
   onImageError(event: any) {
+    console.error('圖片載入失敗:', event.target.src);
     event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5YTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWcluePh+eEoeazleWKoOi8iDwvdGV4dD48L3N2Zz4=';
+  }
+
+  onImageLoad(event: any) {
+    console.log('圖片載入成功:', event.target.src);
   }
 
 
