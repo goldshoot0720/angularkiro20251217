@@ -2,25 +2,5 @@
 name = "angularkiro20251217"
 compatibility_date = "2024-12-17"
 
-# Pages build configuration
+# Pages build output directory
 pages_build_output_dir = "dist/angularkiro20251217/browser"
-
-[build]
-command = "npm run build"
-
-# Environment variables
-[vars]
-ENVIRONMENT = "production"
-
-# Custom headers for SPA routing
-[[headers]]
-for = "/*"
-[headers.values]
-X-Frame-Options = "DENY"
-X-Content-Type-Options = "nosniff"
-
-# SPA fallback for Angular routing
-[[redirects]]
-from = "/*"
-to = "/index.html"
-status = 200
