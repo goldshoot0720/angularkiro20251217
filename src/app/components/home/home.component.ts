@@ -158,20 +158,11 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
             
             <!-- 圖片容器 -->
             <div class="aspect-square overflow-hidden bg-gray-100 relative">
-              <!-- 載入指示器 -->
-              <div class="absolute inset-0 flex items-center justify-center bg-gray-200">
-                <div class="animate-pulse text-gray-400">
-                  <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
-                  </svg>
-                </div>
-              </div>
-              
               <!-- 實際圖片 -->
               <img 
                 [src]="image.path" 
                 [alt]="image.name"
-                class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300 opacity-0"
+                class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300"
                 (error)="onImageError($event)"
                 (load)="onImageLoad($event)"
                 loading="lazy">
@@ -365,9 +356,11 @@ export class HomeComponent implements OnInit {
     console.warn('圖片載入失敗:', event.target.src);
     event.target.src = this.imageService.getFallbackImage();
     event.target.classList.add('image-error');
+    event.target.style.opacity = '1';
   }
 
   onImageLoad(event: any) {
+    console.log('圖片載入成功:', event.target.src);
     event.target.classList.add('image-loaded');
   }
 }
