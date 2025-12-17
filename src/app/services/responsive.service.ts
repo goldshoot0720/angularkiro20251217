@@ -52,9 +52,11 @@ export class ResponsiveService {
     const height = window.innerHeight;
     const isPortrait = height > width;
 
-    const isMobile = width <= 768;
-    const isTablet = width >= 769 && width <= 1024;
-    const isDesktop = width >= 1025;
+    // 🔥 修復：與 Tailwind 斷點一致
+    // Tailwind: sm=640px, md=768px, lg=1024px, xl=1280px
+    const isMobile = width < 1024;  // < lg (與 lg:hidden 一致)
+    const isTablet = width >= 768 && width < 1024;  // md 到 lg 之間
+    const isDesktop = width >= 1024;  // >= lg (與 lg:flex 一致)
     const isTabletPortrait = isTablet && isPortrait;
     const isTabletLandscape = isTablet && !isPortrait;
 

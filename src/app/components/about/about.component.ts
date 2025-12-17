@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
       </div>
       
       <div class="mb-8">
-      <div class="mb-8">
         <h1 class="text-2xl font-bold text-gray-800 mb-2">關於我們</h1>
         <p class="text-gray-600">了解鋒兄Next資訊管理的使命與願景</p>
       </div>

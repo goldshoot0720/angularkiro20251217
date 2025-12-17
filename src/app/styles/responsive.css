@@ -194,8 +194,8 @@
   object-fit: cover;
 }
 
-/* 手機版 */
-@media (max-width: 768px) {
+/* 手機版 (< 640px) */
+@media (max-width: 639px) {
   .mobile-only {
     display: block !important;
   }
@@ -208,9 +208,38 @@
   .mobile-hidden {
     display: none !important;
   }
+  
+  /* 手機專用間距 */
+  .responsive-container {
+    padding: 0.75rem;
+  }
+  
+  .responsive-card {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+  }
 }
 
-/* 平板版 */
+/* 小平板 (640px - 768px) */
+@media (min-width: 640px) and (max-width: 768px) {
+  .tablet-only {
+    display: block !important;
+  }
+  
+  .mobile-only {
+    display: none !important;
+  }
+  
+  .responsive-container {
+    padding: 1rem;
+  }
+  
+  .responsive-card {
+    padding: 1rem;
+  }
+}
+
+/* 大平板 (769px - 1024px) */
 @media (min-width: 769px) and (max-width: 1024px) {
   .tablet-only {
     display: block !important;
@@ -223,9 +252,17 @@
   .tablet-hidden {
     display: none !important;
   }
+  
+  .responsive-container {
+    padding: 1.25rem;
+  }
+  
+  .responsive-card {
+    padding: 1.25rem;
+  }
 }
 
-/* 桌面版 */
+/* 桌面版 (> 1024px) */
 @media (min-width: 1025px) {
   .desktop-only {
     display: block !important;
@@ -238,6 +275,10 @@
   
   .desktop-hidden {
     display: none !important;
+  }
+  
+  .responsive-container {
+    padding: 1.5rem;
   }
 }
 
@@ -263,37 +304,82 @@
   }
 }
 
-/* 響應式間距 */
+/* 響應式間距 - 更細緻的斷點 */
 .responsive-padding {
-  padding: 1rem;
+  padding: 0.75rem;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 640px) {
+  .responsive-padding {
+    padding: 1rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .responsive-padding {
+    padding: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
   .responsive-padding {
     padding: 1.5rem;
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1280px) {
   .responsive-padding {
     padding: 2rem;
   }
 }
 
-/* 響應式文字大小 */
+/* 響應式文字大小 - 更細緻的斷點 */
 .responsive-text {
   font-size: 0.875rem;
+  line-height: 1.5;
 }
 
-@media (min-width: 769px) {
+@media (min-width: 640px) {
+  .responsive-text {
+    font-size: 0.9375rem;
+  }
+}
+
+@media (min-width: 768px) {
   .responsive-text {
     font-size: 1rem;
   }
 }
 
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
+  .responsive-text {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (min-width: 1280px) {
   .responsive-text {
     font-size: 1.125rem;
+  }
+}
+
+/* 觸控設備優化 */
+@media (hover: none) and (pointer: coarse) {
+  /* 增加可點擊區域 */
+  button, a, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* 移除懸停效果 */
+  .responsive-card:hover {
+    transform: none;
+  }
+  
+  /* 添加觸控反饋 */
+  .responsive-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
   }
 }
 

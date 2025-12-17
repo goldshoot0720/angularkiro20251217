@@ -37,20 +37,129 @@ p, span, div, h1, h2, h3, h4, h5, h6 {
   color: inherit;
 }
 
-/* 手機版選單樣式 */
+/* 手機版/平板選單樣式 - 響應式優化 */
 .mobile-menu-container {
-  animation: slideDown 0.3s ease-out;
-  overflow: visible;
+  animation: slideDown 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+  max-height: 75vh;
+  -webkit-overflow-scrolling: touch;
 }
 
 @keyframes slideDown {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* 手機版優化 (< 640px) */
+@media (max-width: 639px) {
+  .mobile-menu-container {
+    max-height: 70vh;
+  }
+  
+  main {
+    min-height: calc(100vh - 70px);
+    background-color: #f9fafb;
+  }
+  
+  /* 觸控優化 - 增加點擊區域 */
+  .mobile-menu-container a {
+    min-height: 80px;
+    touch-action: manipulation;
+  }
+}
+
+/* 平板優化 (640px - 1023px) */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .mobile-menu-container {
+    max-height: 80vh;
+  }
+  
+  main {
+    min-height: calc(100vh - 85px);
+    background-color: #f9fafb;
+  }
+  
+  /* 平板觸控優化 */
+  .mobile-menu-container a {
+    min-height: 100px;
+    touch-action: manipulation;
+  }
+}
+
+/* 確保所有設備上文本可見 */
+@media (max-width: 1023px) {
+  * {
+    color: #1f2937;
+  }
+  
+  .bg-white, .bg-gray-50 {
+    color: #1f2937 !important;
+  }
+  
+  /* 平滑滾動 */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* 防止選單項目文字換行 */
+  .mobile-menu-container a span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* 🔥 關鍵修復：確保手機版沒有側邊欄的 margin */
+  main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+
+/* 桌面版佈局優化 (≥ 1024px) */
+@media (min-width: 1024px) {
+  /* 確保側邊欄固定 */
+  .sidebar {
+    position: fixed !important;
+    left: 0;
+    top: 0;
+    height: 100vh;
+  }
+  
+  /* 確保主內容區域不被遮擋 */
+  main {
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+/* 觸控反饋優化 */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-menu-container a:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+  
+  button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* 橫向模式優化 */
+@media (max-width: 1023px) and (orientation: landscape) {
+  .mobile-menu-container {
+    max-height: 60vh;
+  }
+  
+  header {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
 }
 

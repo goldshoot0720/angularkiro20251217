@@ -23,8 +23,10 @@ import { takeUntil } from 'rxjs/operators';
 
     /* 手機版容器 */
     .mobile-container {
-      padding: 1rem;
+      padding: 0.75rem;
       max-width: 100%;
+      width: 100%;
+      box-sizing: border-box;
     }
 
     /* 平板版容器 */
