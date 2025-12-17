@@ -40,6 +40,9 @@ body {
 
 @import "tailwindcss";
 
+/* 響應式工具類 */
+@import "./app/styles/responsive.css";
+
 /* 影片載入優化 - 修正抖動問題 */
 .video-container {
   position: relative;

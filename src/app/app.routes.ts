@@ -43,5 +43,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/about/about.component').then(m => m.AboutComponent),
     title: '關於我們'
   },
+  { 
+    path: 'responsive-demo', 
+    loadComponent: () => import('./components/responsive-demo/responsive-demo.component').then(m => m.ResponsiveDemoComponent),
+    title: '響應式展示'
+  },
   { path: '**', redirectTo: '/home' }
 ];

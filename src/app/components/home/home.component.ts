@@ -1,70 +1,82 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ImageService, ImageItem } from '../../services/image.service';
 import { ImageDetailComponent } from '../image-detail/image-detail.component';
+import { ResponsiveContainerComponent } from '../../shared/components/responsive-container/responsive-container.component';
+import { ResponsiveCardComponent } from '../../shared/components/responsive-card/responsive-card.component';
+import { ResponsiveGridComponent } from '../../shared/components/responsive-grid/responsive-grid.component';
+import { ResponsiveService, ScreenSize } from '../../services/responsive.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, ImageDetailComponent],
+  imports: [
+    CommonModule, 
+    RouterModule, 
+    FormsModule, 
+    ImageDetailComponent,
+    ResponsiveContainerComponent,
+    ResponsiveCardComponent,
+    ResponsiveGridComponent
+  ],
   template: `
-    <div class="p-6">
+    <app-responsive-container>
       <!-- 歡迎橫幅 -->
-      <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-6 text-white mb-6">
-        <h1 class="text-2xl font-bold mb-2">歡迎使用鋒兄Angular資訊管理系統</h1>
-        <p class="text-blue-100">版權所有 2025 - 2125</p>
-        <div class="flex space-x-4 mt-4 text-sm">
-          <span>前端使用 Angular + Angular Material</span>
-          <span>後端使用 Nhost</span>
-          <span>網站存放於 CloudFlare</span>
+      <app-responsive-card class="mb-6" customClasses="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+        <h1 class="text-2xl md:text-3xl lg:text-4xl font-bold mb-2">歡迎使用鋒兄Angular資訊管理系統</h1>
+        <p class="text-blue-100 mb-4">版權所有 2025 - 2125</p>
+        <div class="responsive-flex responsive-flex-row gap-2 text-xs md:text-sm">
+          <span class="bg-white bg-opacity-20 px-2 py-1 rounded">Angular + Material</span>
+          <span class="bg-white bg-opacity-20 px-2 py-1 rounded">Nhost 後端</span>
+          <span class="bg-white bg-opacity-20 px-2 py-1 rounded">CloudFlare 託管</span>
         </div>
-      </div>
+      </app-responsive-card>
 
       <!-- 圖片路徑測試 -->
-      <div class="bg-white rounded-lg p-4 mb-6">
-        <h3 class="text-lg font-semibold mb-4">圖片路徑測試</h3>
-        <div class="grid grid-cols-4 gap-4">
+      <app-responsive-card title="圖片路徑測試" class="mb-6">
+        <app-responsive-grid [mobileColumns]="2" [tabletColumns]="4" [desktopColumns]="4">
           <div class="text-center">
-            <p class="text-sm mb-2">Assets 路徑</p>
-            <img src="/assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+            <p class="text-xs md:text-sm mb-2">Assets 路徑</p>
+            <img src="/assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="responsive-img-square border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
           <div class="text-center">
-            <p class="text-sm mb-2">Public 路徑</p>
-            <img src="/test-image-direct.png" alt="測試圖片" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+            <p class="text-xs md:text-sm mb-2">Public 路徑</p>
+            <img src="/test-image-direct.png" alt="測試圖片" class="responsive-img-square border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
           <div class="text-center">
-            <p class="text-sm mb-2">相對 Assets</p>
-            <img src="assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+            <p class="text-xs md:text-sm mb-2">相對 Assets</p>
+            <img src="assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片" class="responsive-img-square border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
           <div class="text-center">
-            <p class="text-sm mb-2">備用圖片</p>
-            <img [src]="imageService.getFallbackImage()" alt="備用圖片" class="w-20 h-20 object-cover mx-auto border">
+            <p class="text-xs md:text-sm mb-2">備用圖片</p>
+            <img [src]="imageService.getFallbackImage()" alt="備用圖片" class="responsive-img-square border">
           </div>
-        </div>
-      </div>
+        </app-responsive-grid>
+      </app-responsive-card>
 
       <!-- 圖片展示區域 -->
-      <div class="mb-6">
-        <div class="flex justify-between items-center mb-4">
+      <app-responsive-card title="圖片展示" class="mb-6">
+        <div slot="header" class="responsive-flex responsive-flex-between items-center">
           <div>
-            <h2 class="text-2xl font-bold text-gray-800 mb-2">圖片展示</h2>
-            <p class="text-gray-600">共 {{ stats.total }} 張圖片 • 最後更新: {{ stats.lastUpdate | date:'short' }}</p>
+            <p class="text-sm md:text-base text-gray-600">共 {{ stats.total }} 張圖片 • 最後更新: {{ stats.lastUpdate | date:'short' }}</p>
           </div>
-          <div class="flex gap-2">
+          <div class="responsive-flex responsive-flex-row gap-2">
             <button 
               (click)="refreshImages()"
-              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center gap-2">
+              class="responsive-btn responsive-btn-sm bg-blue-500 text-white hover:bg-blue-600">
               <span>🔄</span>
-              刷新圖片
+              <span class="desktop-only">刷新圖片</span>
             </button>
             <button 
               (click)="showRecentOnly = !showRecentOnly"
               [class]="showRecentOnly ? 'bg-green-500 hover:bg-green-600' : 'bg-gray-500 hover:bg-gray-600'"
-              class="px-4 py-2 text-white rounded-lg transition-colors flex items-center gap-2">
+              class="responsive-btn responsive-btn-sm text-white">
               <span>{{ showRecentOnly ? '✅' : '📅' }}</span>
-              {{ showRecentOnly ? '顯示全部' : '僅顯示最新' }}
+              <span class="desktop-only">{{ showRecentOnly ? '顯示全部' : '僅顯示最新' }}</span>
             </button>
           </div>
         </div>
@@ -112,10 +124,10 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
             <option value="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">大網格</option>
           </select>
         </div>
-      </div>
+      </app-responsive-card>
 
       <!-- 統計卡片 -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <app-responsive-grid [mobileColumns]="1" [tabletColumns]="2" [desktopColumns]="4" class="mb-6">
         <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-4 rounded-xl shadow-lg">
           <div class="flex items-center justify-between">
             <div>
@@ -155,12 +167,11 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
             <div class="text-3xl opacity-80">✨</div>
           </div>
         </div>
-      </div>
+      </app-responsive-grid>
 
       <!-- 分類統計 -->
-      <div class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-3">分類統計</h3>
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+      <app-responsive-card title="分類統計" class="mb-6">
+        <app-responsive-grid [mobileColumns]="2" [tabletColumns]="3" [desktopColumns]="6">
           <div *ngFor="let category of stats.categoryBreakdown" 
                class="bg-white border border-gray-200 rounded-lg p-3 text-center hover:shadow-md transition-shadow cursor-pointer"
                (click)="filterByCategory(category.name)">
@@ -168,13 +179,13 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
             <div class="text-sm font-medium text-gray-800">{{ getCategoryName(category.name) }}</div>
             <div class="text-lg font-bold text-blue-600">{{ category.count }}</div>
           </div>
-        </div>
-      </div>
+        </app-responsive-grid>
+      </app-responsive-card>
 
       <!-- 圖片網格 -->
-      <div class="mb-6">
+      <app-responsive-card class="mb-6">
         <p class="text-gray-600 mb-4">顯示 {{ filteredImages().length }} 張圖片</p>
-        <div [class]="'grid gap-4 mb-8 ' + gridSize">
+        <div [class]="'grid gap-4 ' + gridSize">
           <div *ngFor="let image of filteredImages(); trackBy: trackByImageName" 
                class="group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
                (click)="openImageModal(image)">
@@ -207,12 +218,11 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
             </div>
           </div>
         </div>
-      </div>
+      </app-responsive-card>
 
       <!-- 快速功能區 -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h3 class="text-lg font-semibold text-gray-800 mb-4">快速功能</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <app-responsive-card title="快速功能">
+        <app-responsive-grid [mobileColumns]="2" [tabletColumns]="4" [desktopColumns]="4">
           <a routerLink="/food-management" class="bg-orange-100 hover:bg-orange-200 p-4 rounded-lg text-center transition-colors">
             <div class="text-2xl mb-2">🍽️</div>
             <p class="text-sm font-medium text-gray-700">食品管理</p>
@@ -225,13 +235,12 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
             <div class="text-2xl mb-2">🎬</div>
             <p class="text-sm font-medium text-gray-700">影片介紹</p>
           </a>
-
           <a routerLink="/dashboard" class="bg-blue-100 hover:bg-blue-200 p-4 rounded-lg text-center transition-colors">
             <div class="text-2xl mb-2">📊</div>
             <p class="text-sm font-medium text-gray-700">數據儀表板</p>
           </a>
-        </div>
-      </div>
+        </app-responsive-grid>
+      </app-responsive-card>
 
       <!-- 圖片詳情模態框 -->
       <div *ngIf="selectedImage()" 
@@ -245,10 +254,12 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
           </app-image-detail>
         </div>
       </div>
-    </div>
+    </app-responsive-container>
   `
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+  
   images: ImageItem[] = [];
   stats: any = {};
   selectedCategory = '';
@@ -257,19 +268,52 @@ export class HomeComponent implements OnInit {
   selectedImage = signal<ImageItem | null>(null);
   searchTerm = '';
   showRecentOnly = false;
+  screenSize: ScreenSize | null = null;
 
-  constructor(public imageService: ImageService) {}
+  constructor(
+    public imageService: ImageService,
+    private responsiveService: ResponsiveService
+  ) {}
 
   ngOnInit() {
+    // 訂閱響應式服務
+    this.responsiveService.getScreenSize$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(size => {
+        this.screenSize = size;
+        this.updateGridSize();
+      });
+
     // 訂閱實時圖片數據流
-    this.imageService.getImagesStream().subscribe(images => {
-      this.images = images;
-    });
+    this.imageService.getImagesStream()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(images => {
+        this.images = images;
+      });
     
     // 訂閱實時統計數據流
-    this.imageService.getStatsStream().subscribe(stats => {
-      this.stats = stats;
-    });
+    this.imageService.getStatsStream()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(stats => {
+        this.stats = stats;
+      });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private updateGridSize() {
+    if (!this.screenSize) return;
+    
+    if (this.screenSize.isMobile) {
+      this.gridSize = 'grid-cols-2';
+    } else if (this.screenSize.isTablet) {
+      this.gridSize = 'grid-cols-3 md:grid-cols-4';
+    } else {
+      this.gridSize = 'grid-cols-4 lg:grid-cols-6';
+    }
   }
 
   filteredImages(): ImageItem[] {
