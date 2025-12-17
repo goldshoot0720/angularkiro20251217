@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>圖片路徑測試</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-item { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        img { max-width: 200px; max-height: 200px; border: 1px solid #ddd; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>圖片路徑測試</h1>
+    
+    <div class="test-item">
+        <h3>測試 1: /images/ 路徑</h3>
+        <img src="/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片 1" 
+             onload="this.nextElementSibling.innerHTML='<span class=success>✅ 載入成功</span>'"
+             onerror="this.nextElementSibling.innerHTML='<span class=error>❌ 載入失敗</span>'">
+        <div>載入中...</div>
+    </div>
+    
+    <div class="test-item">
+        <h3>測試 2: images/ 路徑（無前導斜線）</h3>
+        <img src="images/ChatGPT Image 1111.png" alt="測試圖片 2"
+             onload="this.nextElementSibling.innerHTML='<span class=success>✅ 載入成功</span>'"
+             onerror="this.nextElementSibling.innerHTML='<span class=error>❌ 載入失敗</span>'">
+        <div>載入中...</div>
+    </div>
+    
+    <div class="test-item">
+        <h3>測試 3: ./images/ 路徑</h3>
+        <img src="./images/248adc66-2260-491b-b5a9-91ca01099528.png" alt="測試圖片 3"
+             onload="this.nextElementSibling.innerHTML='<span class=success>✅ 載入成功</span>'"
+             onerror="this.nextElementSibling.innerHTML='<span class=error>❌ 載入失敗</span>'">
+        <div>載入中...</div>
+    </div>
+    
+    <div class="test-item">
+        <h3>測試 4: 根目錄測試圖片</h3>
+        <img src="/test-image.png" alt="根目錄測試圖片"
+             onload="this.nextElementSibling.innerHTML='<span class=success>✅ 載入成功</span>'"
+             onerror="this.nextElementSibling.innerHTML='<span class=error>❌ 載入失敗</span>'">
+        <div>載入中...</div>
+    </div>
+    
+    <script>
+        console.log('圖片測試頁面載入完成');
+        console.log('當前頁面 URL:', window.location.href);
+        
+        // 測試圖片路徑
+        const testPaths = [
+            '/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png',
+            'images/ChatGPT Image 1111.png',
+            './images/248adc66-2260-491b-b5a9-91ca01099528.png',
+            '/test-image.png'
+        ];
+        
+        testPaths.forEach((path, index) => {
+            setTimeout(() => {
+                fetch(path)
+                    .then(response => {
+                        console.log(`路徑 ${path}: ${response.ok ? '✅ 可訪問' : '❌ 不可訪問'} (${response.status})`);
+                    })
+                    .catch(error => {
+                        console.error(`路徑 ${path}: ❌ 網路錯誤`, error);
+                    });
+            }, index * 100);
+        });
+    </script>
+</body>
+</html>

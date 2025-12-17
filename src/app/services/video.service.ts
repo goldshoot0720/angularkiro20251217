@@ -86,29 +86,17 @@ export class VideoService {
     if (video) {
       this.updateLastWatched(videoId);
       
-      // 添加小延遲以提供更平滑的載入體驗
-      return timer(200).pipe(
-        map(() => {
-          // 確保 URL 有效性
-          if (this.isValidVideoUrl(video.url)) {
-            return video.url;
-          } else {
-            throw new Error('無效的影片 URL');
-          }
-        }),
-        catchError(error => {
-          console.error('播放影片時發生錯誤:', error);
-          return of('');
-        })
-      );
+      // 立即返回 URL，減少不必要的延遲
+      if (this.isValidVideoUrl(video.url)) {
+        return of(video.url);
+      } else {
+        console.error('無效的影片 URL:', video.url);
+        return of('');
+      }
     }
     
-    return of('').pipe(
-      catchError(error => {
-        console.error('找不到指定的影片:', error);
-        return of('');
-      })
-    );
+    console.error('找不到指定的影片:', videoId);
+    return of('');
   }
 
   // 檢查影片 URL 是否有效

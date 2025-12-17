@@ -40,14 +40,33 @@ body {
 
 @import "tailwindcss";
 
-/* 影片載入優化 */
+/* 影片載入優化 - 修正抖動問題 */
 .video-container {
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 256px; /* 固定高度防止佈局跳動 */
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .video-container video {
-  transition: opacity 0.3s ease-in-out;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.5s ease-in-out;
+  background-color: #000;
+}
+
+/* 防止影片載入時的閃爍 */
+.video-container video[src=""] {
+  opacity: 0;
+}
+
+.video-container video:not([src=""]) {
+  opacity: 1;
 }
 
 .video-loading {
@@ -102,19 +121,28 @@ video::-webkit-media-controls-panel {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-/* 影片載入狀態 */
+/* 影片載入狀態 - 防止抖動 */
 .video-loading-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(45deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.5));
+  background: linear-gradient(45deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 30;
+  backdrop-filter: blur(2px);
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* 載入動畫優化 */
+.video-loading-overlay .animate-spin {
+  border-width: 3px;
+  border-color: rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
 }
 
 /* 進度條動畫 */
@@ -142,6 +170,44 @@ video::-webkit-media-controls-panel {
     width: 60px;
     height: 60px;
   }
+}
+
+/* 影片縮圖容器 - 防止佈局跳動 */
+.video-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transition: transform 0.2s ease-in-out;
+}
+
+.video-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+/* 影片切換動畫 */
+.video-container .video-thumbnail,
+.video-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 平滑的狀態切換 */
+.video-container .opacity-0 {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+.video-container .opacity-100 {
+  opacity: 1 !important;
+  pointer-events: auto;
 }
 
 /* 影片品質標籤 */

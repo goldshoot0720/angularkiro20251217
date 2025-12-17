@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, from } from 'rxjs';
 import { NhostService } from './nhost.service';
 
 export interface Food {
@@ -48,6 +49,11 @@ export class FoodService {
       console.error('GraphQL 連接測試失敗:', error);
       return false;
     }
+  }
+
+  // 查詢所有食品（Observable 版本）
+  getAllFoodsObservable(): Observable<Food[]> {
+    return from(this.getAllFoods());
   }
 
   // 查詢所有食品（按到期日期排序，由近至遠）

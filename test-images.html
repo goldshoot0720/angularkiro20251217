@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Path Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-item { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .test-image { width: 100px; height: 100px; object-fit: cover; border: 1px solid #ddd; }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>圖片路徑測試</h1>
+    
+    <div class="test-item">
+        <h3>測試 1: /images/ 路徑</h3>
+        <img src="/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" 
+             alt="測試圖片 1" 
+             class="test-image"
+             onload="showResult(this, true)"
+             onerror="showResult(this, false)">
+        <div id="result1"></div>
+    </div>
+    
+    <div class="test-item">
+        <h3>測試 2: 根目錄測試圖片</h3>
+        <img src="/test-image.png" 
+             alt="測試圖片 2" 
+             class="test-image"
+             onload="showResult(this, true)"
+             onerror="showResult(this, false)">
+        <div id="result2"></div>
+    </div>
+    
+    <div class="test-item">
+        <h3>測試 3: ChatGPT 圖片</h3>
+        <img src="/images/ChatGPT Image 1111.png" 
+             alt="測試圖片 3" 
+             class="test-image"
+             onload="showResult(this, true)"
+             onerror="showResult(this, false)">
+        <div id="result3"></div>
+    </div>
+    
+    <script>
+        let testCount = 0;
+        function showResult(img, success) {
+            testCount++;
+            const resultDiv = document.getElementById('result' + testCount);
+            if (success) {
+                resultDiv.innerHTML = '<span class="success">✅ 載入成功: ' + img.src + '</span>';
+                console.log('圖片載入成功:', img.src);
+            } else {
+                resultDiv.innerHTML = '<span class="error">❌ 載入失敗: ' + img.src + '</span>';
+                console.error('圖片載入失敗:', img.src);
+            }
+        }
+    </script>
+</body>
+</html>

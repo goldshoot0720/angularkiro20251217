@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -37,6 +37,16 @@ interface DashboardStats {
       <div *ngIf="isLoading" class="text-center py-12">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
         <p class="text-gray-600">載入數據中...</p>
+      </div>
+
+      <!-- 調試信息 -->
+      <div class="bg-yellow-100 p-4 rounded-lg mb-4 text-sm">
+        <p><strong>調試信息:</strong></p>
+        <p>isLoading: {{ isLoading }}</p>
+        <p>食品數量: {{ foods.length }}</p>
+        <p>訂閱數量: {{ subscriptions.length }}</p>
+        <p>食品總數統計: {{ stats.food.total }}</p>
+        <p>訂閱總數統計: {{ stats.subscription.total }}</p>
       </div>
 
       <!-- 主要統計卡片 -->
@@ -296,7 +306,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   constructor(
     private foodService: FoodService,
-    private subscriptionService: SubscriptionService
+    private subscriptionService: SubscriptionService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
   ) {}
 
   ngOnInit() {
@@ -308,27 +320,47 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  async loadDashboardData() {
+  loadDashboardData() {
     this.isLoading = true;
+    console.log('開始載入儀表板數據...');
     
-    try {
-      // 並行載入食品和訂閱數據
-      const [foods, subscriptions] = await Promise.all([
-        this.foodService.getAllFoods(),
-        this.subscriptionService.getSubscriptions().toPromise()
-      ]);
-
-      this.foods = foods || [];
-      this.subscriptions = subscriptions || [];
-      
-      this.calculateStats();
-      this.updateUpcomingItems();
-      
-    } catch (error) {
-      console.error('載入儀表板數據失敗:', error);
-    } finally {
-      this.isLoading = false;
-    }
+    // 使用 forkJoin 來並行載入數據
+    forkJoin({
+      foods: this.foodService.getAllFoodsObservable(),
+      subscriptions: this.subscriptionService.getSubscriptions()
+    }).pipe(
+      takeUntil(this.destroy$)
+    ).subscribe({
+      next: (data) => {
+        // 確保在 Angular zone 內執行
+        this.ngZone.run(() => {
+          console.log('儀表板數據載入完成:', data);
+          this.foods = data.foods || [];
+          this.subscriptions = data.subscriptions || [];
+          
+          console.log('載入的食品數量:', this.foods.length);
+          console.log('載入的訂閱數量:', this.subscriptions.length);
+          
+          this.calculateStats();
+          this.updateUpcomingItems();
+          this.isLoading = false;
+          
+          console.log('統計數據:', this.stats);
+          console.log('isLoading 狀態:', this.isLoading);
+          
+          // 手動觸發變更檢測
+          this.cdr.detectChanges();
+          console.log('儀表板 UI 更新完成');
+        });
+      },
+      error: (error) => {
+        this.ngZone.run(() => {
+          console.error('載入儀表板數據失敗:', error);
+          this.isLoading = false;
+          this.cdr.detectChanges();
+        });
+      }
+    });
   }
 
   calculateStats() {

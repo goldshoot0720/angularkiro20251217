@@ -11,21 +11,89 @@ import { Subject, takeUntil } from 'rxjs';
   imports: [CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="p-6">
-      <div class="flex justify-between items-center mb-6">
-        <div>
-          <h1 class="text-2xl font-bold text-gray-800 mb-2">訂閱管理</h1>
-          <p class="text-gray-600">共 {{ subscriptions.length }} 筆訂閱服務</p>
+    <div class="min-h-screen bg-gray-50 p-6">
+      <!-- 頁面標題區域 -->
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+          <div class="flex items-center space-x-4">
+            <div class="bg-blue-100 p-3 rounded-lg">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">訂閱管理</h1>
+              <p class="text-gray-600 mt-1">管理您的所有訂閱服務</p>
+            </div>
+          </div>
           <button 
             (click)="refreshData()"
             [disabled]="loading"
-            class="mt-2 text-sm bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 transition-colors disabled:opacity-50">
-            {{ loading ? '載入中...' : '重新載入' }}
+            class="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg transition-colors disabled:opacity-50">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <span>{{ loading ? '載入中...' : '重新載入' }}</span>
           </button>
         </div>
-        <div class="bg-blue-500 text-white px-6 py-3 rounded-lg">
-          <div class="text-sm">總月費</div>
-          <div class="text-2xl font-bold">NT$ {{ getTotalMonthlyFee() | number }}</div>
+      </div>
+
+      <!-- 統計卡片區域 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-600">總訂閱數</p>
+              <p class="text-2xl font-bold text-gray-900">{{ subscriptions.length }}</p>
+            </div>
+            <div class="bg-blue-100 p-3 rounded-lg">
+              <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+        
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-600">總月費</p>
+              <p class="text-2xl font-bold text-green-600">NT$ {{ getTotalMonthlyFee() | number }}</p>
+            </div>
+            <div class="bg-green-100 p-3 rounded-lg">
+              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-600">即將到期</p>
+              <p class="text-2xl font-bold text-yellow-600">{{ getUpcomingSubscriptions().length }}</p>
+            </div>
+            <div class="bg-yellow-100 p-3 rounded-lg">
+              <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm p-6">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-600">年度總支出</p>
+              <p class="text-2xl font-bold text-purple-600">NT$ {{ (getTotalMonthlyFee() * 12) | number }}</p>
+            </div>
+            <div class="bg-purple-100 p-3 rounded-lg">
+              <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -41,103 +109,170 @@ import { Subject, takeUntil } from 'rxjs';
       </div>
 
       <!-- 新增/編輯訂閱表單 -->
-      <div class="bg-white rounded-lg shadow p-6 mb-6">
-        <h3 class="text-lg font-semibold mb-4" [ngClass]="{
-          'text-green-600': !editingSubscription,
-          'text-blue-600': editingSubscription
-        }">
-          {{ editingSubscription ? '編輯訂閱' : '新增訂閱' }}
-        </h3>
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div>
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex items-center space-x-3 mb-6">
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg">
+            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900">
+            {{ editingSubscription ? '編輯訂閱服務' : '新增訂閱服務' }}
+          </h3>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">服務名稱 *</label>
             <input 
               type="text" 
-              placeholder="服務名稱" 
+              placeholder="例如：Netflix" 
               [(ngModel)]="newSubscription.name"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
           </div>
-          <div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">網站 URL</label>
             <input 
               type="url" 
-              placeholder="網站 URL" 
+              placeholder="https://example.com" 
               [(ngModel)]="newSubscription.site"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
           </div>
-          <div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">月費 (NT$) *</label>
             <input 
               type="number" 
-              placeholder="月費" 
+              placeholder="390" 
               [(ngModel)]="newSubscription.price"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              min="0"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
           </div>
-          <div>
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">下次付款日期 *</label>
             <input 
               type="date" 
               [(ngModel)]="newSubscription.nextdate"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
           </div>
         </div>
-        <div class="mt-4 flex space-x-2">
+        
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
           <button 
             (click)="editingSubscription ? updateSubscription() : addSubscription()"
-            [disabled]="loading"
-            class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors disabled:opacity-50">
-            {{ loading ? '處理中...' : (editingSubscription ? '更新訂閱' : '新增訂閱') }}
+            [disabled]="loading || !newSubscription.name || !newSubscription.nextdate"
+            class="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+            <svg *ngIf="!loading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <div *ngIf="loading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            <span>{{ loading ? '處理中...' : (editingSubscription ? '更新訂閱' : '新增訂閱') }}</span>
           </button>
           <button 
             *ngIf="editingSubscription"
             (click)="resetForm()"
-            class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors">
-            取消編輯
+            class="flex items-center justify-center space-x-2 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            <span>取消編輯</span>
           </button>
         </div>
       </div>
 
       <!-- 訂閱列表 -->
-      <div class="bg-white rounded-lg shadow overflow-hidden">
-        <div *ngIf="loading && subscriptions.length === 0" class="p-8 text-center text-gray-500">
-          載入中...
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <!-- 載入狀態 -->
+        <div *ngIf="loading && subscriptions.length === 0" class="p-12 text-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p class="text-gray-500">載入訂閱資料中...</p>
         </div>
-        <div *ngIf="subscriptions.length === 0 && !loading" class="p-8 text-center text-gray-500">
-          尚未新增任何訂閱服務
+        
+        <!-- 空狀態 -->
+        <div *ngIf="subscriptions.length === 0 && !loading" class="p-12 text-center">
+          <div class="bg-gray-100 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <h3 class="text-lg font-medium text-gray-900 mb-2">尚未新增任何訂閱服務</h3>
+          <p class="text-gray-500 mb-4">開始新增您的第一個訂閱服務來追蹤支出</p>
         </div>
-        <div *ngIf="subscriptions.length > 0" class="overflow-x-auto">
+
+        <!-- 桌面版表格 -->
+        <div *ngIf="subscriptions.length > 0" class="hidden lg:block overflow-x-auto">
           <table class="w-full">
-            <thead class="bg-gray-50">
+            <thead class="bg-gradient-to-r from-gray-50 to-gray-100">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">服務名稱</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  下次付款日期 
-                  <span class="text-blue-500 ml-1" title="已按日期排序（由近至遠）">↑</span>
+                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                    <span>服務名稱</span>
+                  </div>
                 </th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">月費</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">網站</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>下次付款日期</span>
+                    <span class="text-blue-500 ml-1" title="已按日期排序（由近至遠）">↑</span>
+                  </div>
+                </th>
+                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                    </svg>
+                    <span>月費</span>
+                  </div>
+                </th>
+                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                    </svg>
+                    <span>網站</span>
+                  </div>
+                </th>
+                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">操作</th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-100">
               <tr *ngFor="let subscription of subscriptions" 
-                  class="hover:bg-gray-50"
+                  class="hover:bg-gray-50 transition-colors duration-200"
                   [ngClass]="{
                     'bg-yellow-50 border-l-4 border-yellow-400': isUpcomingSubscription(subscription),
                     'bg-red-50 border-l-4 border-red-400': isOverdueSubscription(subscription)
                   }">
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-medium text-gray-900">{{ subscription.name }}</div>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm" [ngClass]="{
-                    'text-red-600 font-semibold': isOverdueSubscription(subscription),
-                    'text-yellow-600 font-semibold': isUpcomingSubscription(subscription),
-                    'text-gray-900': !isUpcomingSubscription(subscription) && !isOverdueSubscription(subscription)
-                  }">
-                    {{ subscription.nextdate | date:'yyyy-MM-dd' }}
-                    <span *ngIf="isOverdueSubscription(subscription)" class="ml-2 text-xs bg-red-100 text-red-800 px-2 py-1 rounded">已逾期</span>
-                    <span *ngIf="isUpcomingSubscription(subscription)" class="ml-2 text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">即將到期</span>
+                  <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                      {{ subscription.name.charAt(0).toUpperCase() }}
+                    </div>
+                    <div class="text-sm font-medium text-gray-900">{{ subscription.name }}</div>
                   </div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <div class="text-sm font-semibold" [ngClass]="{
+                  <div class="flex items-center space-x-2">
+                    <div class="text-sm" [ngClass]="{
+                      'text-red-600 font-semibold': isOverdueSubscription(subscription),
+                      'text-yellow-600 font-semibold': isUpcomingSubscription(subscription),
+                      'text-gray-900': !isUpcomingSubscription(subscription) && !isOverdueSubscription(subscription)
+                    }">
+                      {{ subscription.nextdate | date:'yyyy-MM-dd' }}
+                    </div>
+                    <span *ngIf="isOverdueSubscription(subscription)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      已逾期
+                    </span>
+                    <span *ngIf="isUpcomingSubscription(subscription)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      即將到期
+                    </span>
+                  </div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div class="text-sm font-bold" [ngClass]="{
                     'text-green-600': subscription.price < 200,
                     'text-blue-600': subscription.price >= 200 && subscription.price < 500,
                     'text-orange-600': subscription.price >= 500
@@ -147,21 +282,104 @@ import { Subject, takeUntil } from 'rxjs';
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
                   <a [href]="subscription.site" target="_blank" 
-                     class="text-blue-600 hover:text-blue-900 text-sm">
-                    前往網站
+                     class="inline-flex items-center space-x-1 text-blue-600 hover:text-blue-900 text-sm transition-colors">
+                    <span>前往網站</span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
                   </a>
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <button 
-                    (click)="editSubscription(subscription)"
-                    class="text-blue-600 hover:text-blue-900">編輯</button>
-                  <button 
-                    (click)="deleteSubscription(subscription.id)"
-                    class="text-red-600 hover:text-red-900">刪除</button>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                  <div class="flex items-center space-x-2">
+                    <button 
+                      (click)="editSubscription(subscription)"
+                      class="inline-flex items-center px-3 py-1 rounded-md text-blue-600 hover:bg-blue-50 transition-colors">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                      </svg>
+                      編輯
+                    </button>
+                    <button 
+                      (click)="deleteSubscription(subscription.id)"
+                      class="inline-flex items-center px-3 py-1 rounded-md text-red-600 hover:bg-red-50 transition-colors">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                      刪除
+                    </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
           </table>
+        </div>
+
+        <!-- 手機版卡片列表 -->
+        <div *ngIf="subscriptions.length > 0" class="lg:hidden divide-y divide-gray-100">
+          <div *ngFor="let subscription of subscriptions" 
+               class="p-4 hover:bg-gray-50 transition-colors duration-200"
+               [ngClass]="{
+                 'bg-yellow-50 border-l-4 border-yellow-400': isUpcomingSubscription(subscription),
+                 'bg-red-50 border-l-4 border-red-400': isOverdueSubscription(subscription)
+               }">
+            <div class="flex items-start justify-between">
+              <div class="flex items-center space-x-3 flex-1">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">
+                  {{ subscription.name.charAt(0).toUpperCase() }}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-lg font-medium text-gray-900 truncate">{{ subscription.name }}</h3>
+                  <div class="flex items-center space-x-2 mt-1">
+                    <span class="text-sm text-gray-500">下次付款：</span>
+                    <span class="text-sm font-medium" [ngClass]="{
+                      'text-red-600': isOverdueSubscription(subscription),
+                      'text-yellow-600': isUpcomingSubscription(subscription),
+                      'text-gray-900': !isUpcomingSubscription(subscription) && !isOverdueSubscription(subscription)
+                    }">
+                      {{ subscription.nextdate | date:'MM/dd' }}
+                    </span>
+                    <span *ngIf="isOverdueSubscription(subscription)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      已逾期
+                    </span>
+                    <span *ngIf="isUpcomingSubscription(subscription)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      即將到期
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="text-right">
+                <div class="text-lg font-bold" [ngClass]="{
+                  'text-green-600': subscription.price < 200,
+                  'text-blue-600': subscription.price >= 200 && subscription.price < 500,
+                  'text-orange-600': subscription.price >= 500
+                }">
+                  NT$ {{ subscription.price | number }}
+                </div>
+                <div class="flex items-center space-x-2 mt-2">
+                  <button 
+                    (click)="editSubscription(subscription)"
+                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                  </button>
+                  <button 
+                    (click)="deleteSubscription(subscription.id)"
+                    class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
+                  </button>
+                  <a [href]="subscription.site" target="_blank" 
+                     class="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -250,11 +468,17 @@ export class SubscriptionManagementComponent implements OnInit, OnDestroy {
           this.subscriptions = this.sortSubscriptionsByNextDate(this.subscriptions);
           this.resetForm();
           this.loading = false;
+          // 觸發變更檢測
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('新增訂閱失敗:', error);
           this.error = '新增訂閱失敗';
           this.loading = false;
+          // 觸發變更檢測
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
         }
       });
     }
@@ -291,11 +515,17 @@ export class SubscriptionManagementComponent implements OnInit, OnDestroy {
           }
           this.resetForm();
           this.loading = false;
+          // 觸發變更檢測
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('更新訂閱失敗:', error);
           this.error = '更新訂閱失敗';
           this.loading = false;
+          // 觸發變更檢測
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
         }
       });
     }
@@ -311,11 +541,17 @@ export class SubscriptionManagementComponent implements OnInit, OnDestroy {
             this.subscriptions = this.subscriptions.filter(s => s.id !== id);
           }
           this.loading = false;
+          // 觸發變更檢測
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
         },
         error: (error) => {
           console.error('刪除訂閱失敗:', error);
           this.error = '刪除訂閱失敗';
           this.loading = false;
+          // 觸發變更檢測
+          this.cdr.markForCheck();
+          this.cdr.detectChanges();
         }
       });
     }

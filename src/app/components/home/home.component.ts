@@ -183,7 +183,7 @@ import { ImageDetailComponent } from '../image-detail/image-detail.component';
             <div class="aspect-square overflow-hidden bg-gray-100 relative">
               <!-- 實際圖片 -->
               <img 
-                [src]="image.path" 
+                src="/assets/images/{{ image.name }}" 
                 [alt]="image.name"
                 class="w-full h-full object-cover group-hover:scale-105 transition-all duration-300"
                 (error)="onImageError($event)"
@@ -258,7 +258,7 @@ export class HomeComponent implements OnInit {
   searchTerm = '';
   showRecentOnly = false;
 
-  constructor(private imageService: ImageService) {}
+  constructor(public imageService: ImageService) {}
 
   ngOnInit() {
     // 訂閱實時圖片數據流

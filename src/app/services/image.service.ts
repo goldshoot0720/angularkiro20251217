@@ -11,14 +11,16 @@ export interface ImageItem {
   lastModified?: Date;
   views?: number;
   isNew?: boolean;
+  loaded?: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ImageService {
-  private readonly imageBasePath = '/assets/images/';
+  private imageBasePath = '/assets/images/';
   private readonly fallbackImagePath = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5YTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWcluePh+eEoeazleWKoOi8iDwvdGV4dD48L3N2Zz4=';
+  private pathTested = false;
   
   // 實時更新的圖片列表
   private imagesSubject = new BehaviorSubject<ImageItem[]>([]);
@@ -331,25 +333,130 @@ export class ImageService {
   ];
 
   constructor() {
-    // 初始化數據
+    console.log('🚀 圖片服務開始初始化...');
+    
+    // 立即初始化數據，使用默認路徑
     this.updateImageData();
+    
+    // 然後檢測正確的路徑並更新（如果需要）
+    this.detectCorrectPath().then(() => {
+      // 如果路徑改變了，重新更新數據
+      this.updateImageData();
+    });
+    
+    // 測試幾個圖片路徑
+    this.testImagePaths();
     
     // 每30秒檢查一次更新（模擬實時更新）
     interval(30000).subscribe(() => {
       this.checkForUpdates();
     });
+    
+    console.log('✅ 圖片服務初始化完成');
+  }
+
+  private async detectCorrectPath(): Promise<void> {
+    if (this.pathTested) return;
+    
+    const testPaths = [
+      '/assets/images/',  // 優先測試 assets 路徑
+      'assets/images/',
+      '/images/',
+      'images/',
+      './images/'
+    ];
+    
+    const testFilename = '0d5c4921-9c4c-46b8-8266-85d89c053d66.png';
+    
+    console.log('🔍 開始檢測正確的圖片路徑...');
+    
+    for (const basePath of testPaths) {
+      const fullPath = basePath + testFilename;
+      console.log(`🧪 測試路徑: ${fullPath}`);
+      
+      const isAvailable = await this.checkImageAvailability(fullPath);
+      
+      if (isAvailable) {
+        console.log(`✅ 找到可用路徑: ${basePath}`);
+        this.imageBasePath = basePath;
+        this.pathTested = true;
+        return;
+      } else {
+        console.log(`❌ 路徑不可用: ${basePath}`);
+      }
+    }
+    
+    console.warn('⚠️ 未找到可用的圖片路徑，使用默認路徑 /images/');
+    this.imageBasePath = '/images/';
+    this.pathTested = true;
+  }
+
+  private testImagePaths() {
+    // 測試幾個不同的路徑格式
+    const testPaths = [
+      '/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png',
+      '/test-image.png',
+      '/images/ChatGPT Image 1111.png',
+      // 嘗試其他可能的路徑格式
+      'images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png',
+      './images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png',
+      'assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png',
+      '/assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png'
+    ];
+    
+    console.log('開始測試圖片路徑...');
+    console.log('當前基礎路徑:', this.imageBasePath);
+    
+    testPaths.forEach((path, index) => {
+      setTimeout(() => {
+        this.checkImageAvailability(path).then(available => {
+          console.log(`路徑 ${path}: ${available ? '✅ 可用' : '❌ 不可用'}`);
+          if (available && path !== this.imageBasePath + '0d5c4921-9c4c-46b8-8266-85d89c053d66.png') {
+            console.log('🔧 發現可用的替代路徑格式:', path);
+            // 如果找到可用的路徑格式，可以考慮更新基礎路徑
+            this.suggestPathFix(path);
+          }
+        }).catch(error => {
+          console.error(`測試路徑 ${path} 時發生錯誤:`, error);
+        });
+      }, index * 100); // 延遲測試避免同時發送太多請求
+    });
+  }
+
+  private suggestPathFix(workingPath: string) {
+    // 分析可用路徑並建議修復
+    if (workingPath.startsWith('assets/images/')) {
+      console.log('💡 建議：圖片應該放在 src/assets/images/ 目錄中');
+      console.log('💡 或者更新 imageBasePath 為 "/assets/images/"');
+    } else if (workingPath.startsWith('./images/')) {
+      console.log('💡 建議：使用相對路徑 "./images/"');
+    } else if (workingPath.startsWith('images/')) {
+      console.log('💡 建議：使用不帶前導斜線的路徑 "images/"');
+    }
   }
 
   private updateImageData() {
+    // 重新生成所有圖片路徑，使用檢測到的正確基礎路徑
+    const updatedImageList = this.imageList.map(img => ({
+      ...img,
+      path: this.imageBasePath + img.name
+    }));
+    
     // 為每個圖片添加時間戳和其他元數據
-    const imagesWithMetadata = this.imageList.map(img => ({
+    const imagesWithMetadata = updatedImageList.map(img => ({
       ...img,
       uploadDate: this.generateUploadDate(img.name),
       size: this.generateFileSize(),
       lastModified: new Date(),
       views: Math.floor(Math.random() * 1000),
-      isNew: this.isRecentImage(img.name)
+      isNew: this.isRecentImage(img.name),
+      loaded: false
     }));
+    
+    console.log('📸 圖片服務初始化完成');
+    console.log('📁 圖片基礎路徑:', this.imageBasePath);
+    console.log('📊 總圖片數量:', imagesWithMetadata.length);
+    console.log('🔗 前3張圖片路徑:', imagesWithMetadata.slice(0, 3).map(img => img.path));
     
     this.imagesSubject.next(imagesWithMetadata);
     this.updateStats(imagesWithMetadata);
@@ -515,8 +622,14 @@ export class ImageService {
   checkImageAvailability(imagePath: string): Promise<boolean> {
     return new Promise((resolve) => {
       const img = new Image();
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
+      img.onload = () => {
+        console.log('圖片載入成功:', imagePath);
+        resolve(true);
+      };
+      img.onerror = () => {
+        console.error('圖片載入失敗:', imagePath);
+        resolve(false);
+      };
       img.src = imagePath;
     });
   }

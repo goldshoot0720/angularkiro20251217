@@ -12,7 +12,7 @@ export const routes: Routes = [
     loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
     title: '儀表板'
   },
-  { path: 'gallery', redirectTo: '/home', pathMatch: 'full' },
+
   { 
     path: 'food-management', 
     loadComponent: () => import('./components/food-management/food-management.component').then(m => m.FoodManagementComponent),

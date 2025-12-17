@@ -187,41 +187,47 @@ import { Subscription } from 'rxjs';
       <!-- 測試圖片 -->
       <div class="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
         <h3 class="text-lg font-semibold mb-2">路徑測試</h3>
-        <div class="grid grid-cols-3 gap-4">
+        <div class="grid grid-cols-4 gap-4">
           <div class="text-center">
-            <p class="text-sm mb-2">測試圖片 (根路徑)</p>
-            <img src="/test-image.png" alt="測試圖片" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+            <p class="text-sm mb-2">Assets 路徑</p>
+            <img src="/assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片1" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
           <div class="text-center">
-            <p class="text-sm mb-2">圖片目錄</p>
+            <p class="text-sm mb-2">Images 路徑</p>
             <img src="/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片2" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
           <div class="text-center">
             <p class="text-sm mb-2">相對路徑</p>
-            <img src="./images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片3" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+            <img src="assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png" alt="測試圖片3" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
+          </div>
+          <div class="text-center">
+            <p class="text-sm mb-2">動態綁定</p>
+            <img [src]="'/assets/images/0d5c4921-9c4c-46b8-8266-85d89c053d66.png'" alt="測試圖片4" class="w-20 h-20 object-cover mx-auto border" (error)="onImageError($event)" (load)="onImageLoad($event)">
           </div>
         </div>
       </div>
 
       <!-- 圖片網格 -->
       <div class="mb-4">
-        <p class="text-gray-600">顯示 {{ filteredImages().length }} 張圖片</p>
+        <p class="text-gray-600">顯示 {{ filteredImages().length }} 張圖片 (總共 {{ images.length }} 張)</p>
+        <div *ngIf="images.length === 0" class="text-red-500 text-sm">
+          ⚠️ 沒有載入到圖片數據，請檢查圖片服務
+        </div>
       </div>
       
       <div [class]="'grid gap-4 ' + gridSize">
-        <div *ngFor="let image of filteredImages(); trackBy: trackByImageName" 
+        <div *ngFor="let image of filteredImages(); let i = index; trackBy: trackByImageName" 
              class="group relative bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
              (click)="openImageModal(image)">
           
           <!-- 圖片容器 -->
           <div class="aspect-square overflow-hidden bg-gray-100">
             <img 
-              [src]="image.path" 
+              src="/assets/images/{{ image.name }}" 
               [alt]="image.name"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               (error)="onImageError($event)"
-              (load)="onImageLoad($event)"
-              loading="lazy">
+              (load)="onImageLoad($event)">
           </div>
           
           <!-- 圖片信息覆蓋層 -->
@@ -275,16 +281,20 @@ export class GalleryComponent implements OnInit, OnDestroy {
   
   private subscriptions: Subscription[] = [];
 
-  constructor(private imageService: ImageService) {}
+  constructor(private imageService: ImageService) {
+    console.log('🖼️ 畫廊組件初始化，圖片服務:', this.imageService);
+  }
 
   ngOnInit() {
     // 訂閱實時圖片更新
     this.subscriptions.push(
       this.imageService.getImagesStream().subscribe(images => {
+        console.log('📸 收到圖片數據:', images.length, '張圖片');
         this.images = images;
-        console.log('載入圖片數量:', images.length);
+        
         if (images.length > 0) {
-          console.log('第一張圖片路徑:', images[0].path);
+          console.log('🔗 第一張圖片路徑:', images[0].path);
+          console.log('🔗 前3張圖片:', images.slice(0, 3).map(img => ({ name: img.name, path: img.path })));
         }
       })
     );
@@ -337,7 +347,7 @@ export class GalleryComponent implements OnInit, OnDestroy {
     // 觸發重新計算過濾結果
   }
 
-  trackByImageName(index: number, image: ImageItem): string {
+  trackByImageName(_index: number, image: ImageItem): string {
     return image.name;
   }
 
@@ -381,8 +391,41 @@ export class GalleryComponent implements OnInit, OnDestroy {
   }
 
   onImageError(event: any) {
-    console.error('圖片載入失敗:', event.target.src);
-    event.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjNmNGY2Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5YTNhZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPuWcluePh+eEoeazleWKoOi8iDwvdGV4dD48L3N2Zz4=';
+    const originalSrc = event.target.src;
+    console.error('圖片載入失敗:', originalSrc);
+    
+    // 如果已經嘗試過備用路徑，直接使用 fallback
+    if (event.target.dataset.retryCount) {
+      console.log('所有路徑都失敗，使用備用圖片');
+      event.target.src = this.imageService.getFallbackImage();
+      return;
+    }
+    
+    // 標記已嘗試過一次
+    event.target.dataset.retryCount = '1';
+    
+    // 嘗試不同的路徑格式
+    if (originalSrc.includes('/images/')) {
+      // 嘗試多種備用路徑
+      const filename = originalSrc.split('/images/')[1];
+      const alternativePaths = [
+        `/assets/images/${filename}`,
+        `images/${filename}`,
+        `./images/${filename}`,
+        `/public/images/${filename}`
+      ];
+      
+      console.log('嘗試備用路徑:', alternativePaths[0]);
+      event.target.src = alternativePaths[0];
+    } else if (originalSrc.includes('/assets/images/')) {
+      // 如果 assets 路徑也失敗，嘗試相對路徑
+      const filename = originalSrc.split('/assets/images/')[1];
+      console.log('嘗試相對路徑:', `images/${filename}`);
+      event.target.src = `images/${filename}`;
+    } else {
+      // 使用備用圖片
+      event.target.src = this.imageService.getFallbackImage();
+    }
   }
 
   onImageLoad(event: any) {
@@ -408,6 +451,53 @@ export class GalleryComponent implements OnInit, OnDestroy {
   refreshImages() {
     // 觸發手動刷新
     this.showNotification('圖片列表已刷新', 'info');
+  }
+
+  private testImagePath(imagePath: string) {
+    console.log('🧪 測試圖片路徑:', imagePath);
+    
+    const img = new Image();
+    img.onload = () => {
+      console.log('✅ 圖片路徑可用:', imagePath);
+    };
+    img.onerror = () => {
+      console.error('❌ 圖片路徑不可用:', imagePath);
+      
+      // 嘗試其他路徑格式
+      const filename = imagePath.split('/').pop();
+      const alternativePaths = [
+        `/images/${filename}`,
+        `images/${filename}`,
+        `./images/${filename}`,
+        `assets/images/${filename}`
+      ];
+      
+      console.log('🔄 嘗試備用路徑:', alternativePaths);
+      this.testAlternativePaths(alternativePaths, 0);
+    };
+    img.src = imagePath;
+  }
+
+  private testAlternativePaths(paths: string[], index: number) {
+    if (index >= paths.length) {
+      console.error('❌ 所有路徑都不可用');
+      return;
+    }
+    
+    const img = new Image();
+    img.onload = () => {
+      console.log('✅ 找到可用的備用路徑:', paths[index]);
+    };
+    img.onerror = () => {
+      console.log('❌ 備用路徑不可用:', paths[index]);
+      this.testAlternativePaths(paths, index + 1);
+    };
+    img.src = paths[index];
+  }
+
+  getImageUrl(image: any): string {
+    // 確保返回正確的圖片 URL
+    return image.path || `/assets/images/${image.name}`;
   }
 
   private showNotification(message: string, type: 'success' | 'error' | 'info') {
