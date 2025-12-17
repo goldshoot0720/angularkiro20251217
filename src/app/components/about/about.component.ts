@@ -6,7 +6,13 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    <div class="p-6">
+    <div class="p-6 bg-white min-h-screen">
+      <!-- 簡化版本 - 確保手機版可以正常顯示 -->
+      <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+        ✅ 關於我們頁面載入成功！
+      </div>
+      
+      <div class="mb-8">
       <div class="mb-8">
         <h1 class="text-2xl font-bold text-gray-800 mb-2">關於我們</h1>
         <p class="text-gray-600">了解鋒兄Next資訊管理的使命與願景</p>

@@ -9,7 +9,7 @@ export const routes: Routes = [
   },
   { 
     path: 'dashboard', 
-    loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    loadComponent: () => import('./components/dashboard-simple/dashboard-simple.component').then(m => m.DashboardSimpleComponent),
     title: '儀表板'
   },
 
@@ -52,6 +52,11 @@ export const routes: Routes = [
     path: 'test', 
     loadComponent: () => import('./components/test/test.component').then(m => m.TestComponent),
     title: '測試頁面'
+  },
+  { 
+    path: 'simple-test', 
+    loadComponent: () => import('./components/simple-test/simple-test.component').then(m => m.SimpleTestComponent),
+    title: '簡單測試'
   },
   { path: '**', redirectTo: '/home' }
 ];

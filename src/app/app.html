@@ -2,7 +2,7 @@
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
 
 <!-- 手機版和小屏幕：頂部導航 -->
-<div class="lg:hidden">
+<div class="block lg:hidden">
   <!-- 頂部導航欄 -->
   <header class="bg-white shadow-lg border-b sticky top-0 z-30">
     <div class="px-4 py-3">
@@ -70,6 +70,22 @@
              class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
             <span class="text-2xl mb-2">ℹ️</span>
             <span class="text-sm font-medium text-gray-700">關於我們</span>
+          </a>
+        </div>
+        
+        <!-- 第二行 - 測試項目 -->
+        <div class="grid grid-cols-2 gap-3 mt-3">
+          <a routerLink="/simple-test" 
+             (click)="closeMobileMenu()"
+             class="flex flex-col items-center p-4 bg-green-50 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-green-200">
+            <span class="text-2xl mb-2">🧪</span>
+            <span class="text-sm font-medium text-green-700">簡單測試</span>
+          </a>
+          <a routerLink="/responsive-demo" 
+             (click)="closeMobileMenu()"
+             class="flex flex-col items-center p-4 bg-purple-50 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-purple-200">
+            <span class="text-2xl mb-2">📱</span>
+            <span class="text-sm font-medium text-purple-700">響應式展示</span>
           </a>
         </div>
         
@@ -204,12 +220,12 @@
   </aside>
   
   <!-- 右側內容區域 - 現代化設計，支持100%-150%缩放 -->
-  <main class="flex-1 ml-56 lg:ml-60 xl:ml-64 2xl:ml-72 min-h-screen">
+  <main class="flex-1 ml-56 lg:ml-60 xl:ml-64 2xl:ml-72 min-h-screen bg-white">
     <!-- 頂部裝飾條 -->
     <div class="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
     
     <!-- 內容區域 - 響應式內邊距 -->
-    <div class="p-4 lg:p-6 xl:p-8 bg-white bg-opacity-95 backdrop-blur-sm min-h-screen">
+    <div class="p-4 lg:p-6 xl:p-8 min-h-screen">
       <router-outlet />
     </div>
   </main>
