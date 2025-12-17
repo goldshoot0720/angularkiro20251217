@@ -32,9 +32,10 @@
     </div>
     
     <!-- 手機選單 - 简化版本 -->
-    <div class="px-4 pb-4" *ngIf="showMobileMenu()">
-      <div class="bg-gray-50 rounded-lg p-4">
-        <div class="grid grid-cols-2 gap-3">
+    <div class="mobile-menu-container" *ngIf="showMobileMenu()">
+      <div class="px-4 pb-4">
+        <div class="bg-gray-50 rounded-lg p-4">
+          <div class="grid grid-cols-2 gap-3">
           <a routerLink="/home" 
              (click)="closeMobileMenu()"
              class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
@@ -89,9 +90,10 @@
           </a>
         </div>
         
-        <!-- 调试信息 -->
-        <div class="mt-4 p-2 bg-yellow-100 rounded text-xs text-gray-600">
-          调试: showMobileMenu = {{ showMobileMenu() }}
+          <!-- 调试信息 -->
+          <div class="mt-4 p-2 bg-yellow-100 rounded text-xs text-gray-600">
+            调试: showMobileMenu = {{ showMobileMenu() }}
+          </div>
         </div>
       </div>
     </div>

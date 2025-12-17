@@ -204,24 +204,22 @@ export interface NavigationItem {
     }
 
     .mobile-menu {
-      position: absolute;
-      top: 100%;
+      position: fixed;
+      top: 57px;
       left: 0;
       right: 0;
       background: white;
       border-bottom: 1px solid #e5e7eb;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transform: translateY(-100%);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease-in-out;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-in-out;
       z-index: 99;
     }
 
     .mobile-menu.open {
-      transform: translateY(0);
-      opacity: 1;
-      visibility: visible;
+      max-height: calc(100vh - 57px);
+      overflow-y: auto;
     }
 
     .mobile-menu-items {
@@ -243,6 +241,7 @@ export interface NavigationItem {
       color: #374151;
       transition: all 0.2s ease-in-out;
       cursor: pointer;
+      position: relative;
     }
 
     .mobile-menu-item:hover:not(.disabled) {

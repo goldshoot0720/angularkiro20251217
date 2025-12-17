@@ -18,9 +18,15 @@ export class App {
   }
 
   toggleMobileMenu() {
-    console.log('toggleMobileMenu called - before:', this.showMobileMenu());
-    this.showMobileMenu.set(!this.showMobileMenu());
+    const currentState = this.showMobileMenu();
+    console.log('toggleMobileMenu called - before:', currentState);
+    this.showMobileMenu.set(!currentState);
     console.log('toggleMobileMenu called - after:', this.showMobileMenu());
+    
+    // 強制觸發變更檢測
+    setTimeout(() => {
+      console.log('After timeout - menu state:', this.showMobileMenu());
+    }, 100);
   }
 
   closeMobileMenu() {

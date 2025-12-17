@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>手機選單測試</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .mobile-menu-container {
+      animation: slideDown 0.3s ease-out;
+      overflow: visible;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+  <!-- 手機版導航測試 -->
+  <div class="block">
+    <!-- 頂部導航欄 -->
+    <header class="bg-white shadow-lg border-b sticky top-0 z-30">
+      <div class="px-4 py-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <div class="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              鋒
+            </div>
+            <div class="ml-3">
+              <h1 class="text-base font-bold text-gray-800">鋒兄Angular資訊管理</h1>
+            </div>
+          </div>
+          <!-- 選單按鈕 -->
+          <div class="relative">
+            <button 
+              type="button"
+              onclick="toggleMenu()" 
+              id="menuButton"
+              class="p-3 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <span class="text-lg font-bold" id="menuIcon">☰</span>
+            </button>
+            <!-- 調試信息 -->
+            <div class="absolute -bottom-6 right-0 text-xs text-gray-500">
+              狀態: <span id="menuStatus">關</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 手機選單 -->
+      <div class="mobile-menu-container hidden" id="mobileMenu">
+        <div class="px-4 pb-4">
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="grid grid-cols-2 gap-3">
+              <a href="#" class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <span class="text-2xl mb-2">🏠</span>
+                <span class="text-sm font-medium text-gray-700">首頁</span>
+              </a>
+              <a href="#" class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <span class="text-2xl mb-2">📊</span>
+                <span class="text-sm font-medium text-gray-700">儀表板</span>
+              </a>
+              <a href="#" class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <span class="text-2xl mb-2">🍽️</span>
+                <span class="text-sm font-medium text-gray-700">食品管理</span>
+              </a>
+              <a href="#" class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <span class="text-2xl mb-2">🎬</span>
+                <span class="text-sm font-medium text-gray-700">影片介紹</span>
+              </a>
+              <a href="#" class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <span class="text-2xl mb-2">📋</span>
+                <span class="text-sm font-medium text-gray-700">訂閱管理</span>
+              </a>
+              <a href="#" class="flex flex-col items-center p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <span class="text-2xl mb-2">ℹ️</span>
+                <span class="text-sm font-medium text-gray-700">關於我們</span>
+              </a>
+            </div>
+            
+            <!-- 調試信息 -->
+            <div class="mt-4 p-2 bg-yellow-100 rounded text-xs text-gray-600">
+              調試: 選單已顯示
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 內容區域 -->
+    <main class="p-4">
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-bold mb-4">手機選單測試頁面</h2>
+        <p class="text-gray-600 mb-4">點擊右上角的選單按鈕來測試選單功能</p>
+        
+        <div class="space-y-2 text-sm">
+          <p><strong>測試步驟：</strong></p>
+          <ol class="list-decimal list-inside space-y-1 text-gray-700">
+            <li>點擊右上角的 ☰ 按鈕</li>
+            <li>檢查選單是否正確展開</li>
+            <li>檢查選單項目是否可見</li>
+            <li>再次點擊按鈕關閉選單</li>
+          </ol>
+        </div>
+
+        <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+          <p class="text-sm text-blue-800"><strong>當前狀態：</strong></p>
+          <p class="text-sm text-blue-600 mt-2">選單狀態: <span id="statusText">關閉</span></p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let menuOpen = false;
+
+    function toggleMenu() {
+      menuOpen = !menuOpen;
+      const menu = document.getElementById('mobileMenu');
+      const icon = document.getElementById('menuIcon');
+      const status = document.getElementById('menuStatus');
+      const statusText = document.getElementById('statusText');
+      
+      console.log('Toggle menu - new state:', menuOpen);
+      
+      if (menuOpen) {
+        menu.classList.remove('hidden');
+        icon.textContent = '✕';
+        status.textContent = '開';
+        statusText.textContent = '開啟';
+      } else {
+        menu.classList.add('hidden');
+        icon.textContent = '☰';
+        status.textContent = '關';
+        statusText.textContent = '關閉';
+      }
+    }
+
+    // 點擊選單項目後關閉選單
+    document.querySelectorAll('#mobileMenu a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Menu item clicked');
+        if (menuOpen) {
+          toggleMenu();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
