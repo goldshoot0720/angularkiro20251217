@@ -108,7 +108,7 @@ import { Subject, takeUntil } from 'rxjs';
         <strong>提醒：</strong>有 {{ getUpcomingSubscriptions().length }} 個訂閱即將在 7 天內到期
       </div>
 
-      <!-- 新增/編輯訂閱表單 -->
+      <!-- 新增訂閱表單 -->
       <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
         <div class="flex items-center space-x-3 mb-6">
           <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-2 rounded-lg">
@@ -116,9 +116,7 @@ import { Subject, takeUntil } from 'rxjs';
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
           </div>
-          <h3 class="text-xl font-bold text-gray-900">
-            {{ editingSubscription ? '編輯訂閱服務' : '新增訂閱服務' }}
-          </h3>
+          <h3 class="text-xl font-bold text-gray-900">新增訂閱服務</h3>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -158,23 +156,22 @@ import { Subject, takeUntil } from 'rxjs';
         
         <div class="mt-6 flex flex-col sm:flex-row gap-3">
           <button 
-            (click)="editingSubscription ? updateSubscription() : addSubscription()"
+            (click)="addSubscription()"
             [disabled]="loading || !newSubscription.name || !newSubscription.nextdate"
             class="flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
             <svg *ngIf="!loading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
             <div *ngIf="loading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            <span>{{ loading ? '處理中...' : (editingSubscription ? '更新訂閱' : '新增訂閱') }}</span>
+            <span>{{ loading ? '新增中...' : '新增訂閱' }}</span>
           </button>
           <button 
-            *ngIf="editingSubscription"
             (click)="resetForm()"
             class="flex items-center justify-center space-x-2 bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition-colors">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
             </svg>
-            <span>取消編輯</span>
+            <span>清除表單</span>
           </button>
         </div>
       </div>
@@ -322,63 +319,202 @@ import { Subject, takeUntil } from 'rxjs';
                  'bg-yellow-50 border-l-4 border-yellow-400': isUpcomingSubscription(subscription),
                  'bg-red-50 border-l-4 border-red-400': isOverdueSubscription(subscription)
                }">
-            <div class="flex items-start justify-between">
-              <div class="flex items-center space-x-3 flex-1">
-                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold">
-                  {{ subscription.name.charAt(0).toUpperCase() }}
+            <!-- 手機版優化布局 -->
+            <div class="space-y-3">
+              <!-- 頂部：服務信息和價格 -->
+              <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3 flex-1 min-w-0">
+                  <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-purple-500 rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0">
+                    {{ subscription.name.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="text-lg font-medium text-gray-900 truncate">{{ subscription.name }}</h3>
+                    <div class="flex items-center space-x-2 mt-1 flex-wrap">
+                      <span class="text-sm text-gray-500">下次付款：</span>
+                      <span class="text-sm font-medium" [ngClass]="{
+                        'text-red-600': isOverdueSubscription(subscription),
+                        'text-yellow-600': isUpcomingSubscription(subscription),
+                        'text-gray-900': !isUpcomingSubscription(subscription) && !isOverdueSubscription(subscription)
+                      }">
+                        {{ subscription.nextdate | date:'MM/dd' }}
+                      </span>
+                      <span *ngIf="isOverdueSubscription(subscription)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        已逾期
+                      </span>
+                      <span *ngIf="isUpcomingSubscription(subscription)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                        即將到期
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class="text-lg font-medium text-gray-900 truncate">{{ subscription.name }}</h3>
-                  <div class="flex items-center space-x-2 mt-1">
-                    <span class="text-sm text-gray-500">下次付款：</span>
-                    <span class="text-sm font-medium" [ngClass]="{
-                      'text-red-600': isOverdueSubscription(subscription),
-                      'text-yellow-600': isUpcomingSubscription(subscription),
-                      'text-gray-900': !isUpcomingSubscription(subscription) && !isOverdueSubscription(subscription)
-                    }">
-                      {{ subscription.nextdate | date:'MM/dd' }}
-                    </span>
-                    <span *ngIf="isOverdueSubscription(subscription)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                      已逾期
-                    </span>
-                    <span *ngIf="isUpcomingSubscription(subscription)" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                      即將到期
-                    </span>
+                <div class="text-right flex-shrink-0 ml-2">
+                  <div class="text-lg font-bold" [ngClass]="{
+                    'text-green-600': subscription.price < 200,
+                    'text-blue-600': subscription.price >= 200 && subscription.price < 500,
+                    'text-orange-600': subscription.price >= 500
+                  }">
+                    NT$ {{ subscription.price | number }}
                   </div>
                 </div>
               </div>
-              <div class="text-right">
-                <div class="text-lg font-bold" [ngClass]="{
-                  'text-green-600': subscription.price < 200,
-                  'text-blue-600': subscription.price >= 200 && subscription.price < 500,
-                  'text-orange-600': subscription.price >= 500
-                }">
-                  NT$ {{ subscription.price | number }}
-                </div>
-                <div class="flex items-center space-x-2 mt-2">
+              
+              <!-- 底部：操作按鈕 -->
+              <div class="flex items-center justify-between pt-2 border-t border-gray-100">
+                <div class="flex items-center space-x-1">
                   <button 
                     (click)="editSubscription(subscription)"
-                    class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
+                    class="flex items-center space-x-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm font-medium">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                     </svg>
+                    <span>編輯</span>
                   </button>
                   <button 
                     (click)="deleteSubscription(subscription.id)"
-                    class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                    class="flex items-center space-x-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors text-sm font-medium">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
+                    <span>刪除</span>
                   </button>
-                  <a [href]="subscription.site" target="_blank" 
-                     class="p-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                    </svg>
-                  </a>
                 </div>
+                <a [href]="subscription.site" target="_blank" 
+                   class="flex items-center space-x-1 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm font-medium">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                  </svg>
+                  <span>網站</span>
+                </a>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 編輯訂閱模態框 -->
+      <div *ngIf="editingSubscription" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-auto transform transition-all">
+          <!-- 模態框標題 -->
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-t-2xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <div class="bg-white bg-opacity-20 p-2 rounded-lg">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-xl font-bold">編輯訂閱服務</h3>
+              </div>
+              <button 
+                type="button"
+                (click)="cancelEdit()"
+                class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-lg transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- 模態框內容 -->
+          <div class="p-6">
+            <form (ngSubmit)="updateSubscription()" #editForm="ngForm">
+              <div class="space-y-5">
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    <span class="flex items-center space-x-2">
+                      <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                      <span>服務名稱 *</span>
+                    </span>
+                  </label>
+                  <input 
+                    type="text" 
+                    [(ngModel)]="editingSubscription.name"
+                    name="editName"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    <span class="flex items-center space-x-2">
+                      <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                      </svg>
+                      <span>網站 URL</span>
+                    </span>
+                  </label>
+                  <input 
+                    type="url" 
+                    placeholder="https://example.com"
+                    [(ngModel)]="editingSubscription.site"
+                    name="editSite"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                      <span class="flex items-center space-x-2">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                        </svg>
+                        <span>月費 (NT$) *</span>
+                      </span>
+                    </label>
+                    <input 
+                      type="number" 
+                      [(ngModel)]="editingSubscription.price"
+                      name="editPrice"
+                      min="0"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                  </div>
+                  
+                  <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                      <span class="flex items-center space-x-2">
+                        <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                        </svg>
+                        <span>下次付款日期 *</span>
+                      </span>
+                    </label>
+                    <input 
+                      type="date" 
+                      [(ngModel)]="editingSubscription.nextdate"
+                      name="editNextdate"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 按鈕區域 -->
+              <div class="mt-8 flex gap-3">
+                <button 
+                  type="submit"
+                  [disabled]="!editForm.valid || loading"
+                  class="flex-1 flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                  <svg *ngIf="!loading" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                  <div *ngIf="loading" class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                  <span>{{ loading ? '更新中...' : '更新訂閱' }}</span>
+                </button>
+                <button 
+                  type="button"
+                  (click)="cancelEdit()"
+                  class="flex-1 flex items-center justify-center space-x-2 bg-gray-500 text-white py-3 rounded-lg hover:bg-gray-600 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                  <span>取消</span>
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -486,49 +622,63 @@ export class SubscriptionManagementComponent implements OnInit, OnDestroy {
 
   editSubscription(subscription: Subscription) {
     this.editingSubscription = { ...subscription };
-    this.newSubscription = {
-      name: subscription.name,
-      site: subscription.site,
-      price: subscription.price,
-      nextdate: subscription.nextdate
-    };
+    
+    // 格式化日期為 YYYY-MM-DD 格式，避免時區問題
+    if (this.editingSubscription.nextdate) {
+      const dateStr = this.editingSubscription.nextdate;
+      if (dateStr.includes('T')) {
+        // 如果是 ISO 格式，只取日期部分
+        this.editingSubscription.nextdate = dateStr.split('T')[0];
+      } else if (dateStr.includes('/')) {
+        // 如果是 MM/DD/YYYY 或類似格式，轉換為 YYYY-MM-DD
+        const date = new Date(dateStr + 'T00:00:00');
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        this.editingSubscription.nextdate = `${year}-${month}-${day}`;
+      }
+    }
   }
 
   updateSubscription() {
-    if (this.editingSubscription && this.newSubscription.name && this.newSubscription.nextdate) {
-      this.loading = true;
-      
-      const updateData = {
-        name: this.newSubscription.name,
-        site: this.newSubscription.site,
-        price: this.newSubscription.price,
-        nextdate: this.newSubscription.nextdate
-      };
+    if (!this.editingSubscription) return;
 
-      this.subscriptionService.updateSubscription(this.editingSubscription.id, updateData).subscribe({
-        next: (updatedSubscription) => {
-          const index = this.subscriptions.findIndex(s => s.id === this.editingSubscription!.id);
-          if (index !== -1) {
-            this.subscriptions[index] = updatedSubscription;
-            // 重新排序
-            this.subscriptions = this.sortSubscriptionsByNextDate(this.subscriptions);
-          }
-          this.resetForm();
-          this.loading = false;
-          // 觸發變更檢測
-          this.cdr.markForCheck();
-          this.cdr.detectChanges();
-        },
-        error: (error) => {
-          console.error('更新訂閱失敗:', error);
-          this.error = '更新訂閱失敗';
-          this.loading = false;
-          // 觸發變更檢測
-          this.cdr.markForCheck();
-          this.cdr.detectChanges();
+    this.loading = true;
+    this.cdr.detectChanges();
+    
+    const updateData = {
+      name: this.editingSubscription.name,
+      site: this.editingSubscription.site,
+      price: this.editingSubscription.price,
+      nextdate: this.editingSubscription.nextdate
+    };
+
+    this.subscriptionService.updateSubscription(this.editingSubscription.id, updateData).subscribe({
+      next: (updatedSubscription) => {
+        const index = this.subscriptions.findIndex(s => s.id === this.editingSubscription!.id);
+        if (index !== -1) {
+          this.subscriptions[index] = updatedSubscription;
+          // 重新排序
+          this.subscriptions = this.sortSubscriptionsByNextDate(this.subscriptions);
         }
-      });
-    }
+        
+        this.editingSubscription = null;
+        this.loading = false;
+        this.cdr.detectChanges();
+        alert('訂閱更新成功！');
+      },
+      error: (error) => {
+        console.error('更新訂閱失敗:', error);
+        this.error = '更新訂閱失敗';
+        this.loading = false;
+        this.cdr.detectChanges();
+        alert('更新訂閱失敗，請稍後再試');
+      }
+    });
+  }
+
+  cancelEdit() {
+    this.editingSubscription = null;
   }
 
   deleteSubscription(id: string) {
@@ -564,7 +714,6 @@ export class SubscriptionManagementComponent implements OnInit, OnDestroy {
       price: 0,
       nextdate: ''
     };
-    this.editingSubscription = null;
   }
 
   getTotalMonthlyFee(): number {

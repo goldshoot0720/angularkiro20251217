@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文字對比度測試</title>
+    <link rel="stylesheet" href="dist/angularkiro20251217/styles-PLW4BY76.css">
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .toggle-btn {
+            padding: 12px 24px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 30px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+        }
+        
+        .test-card {
+            padding: 24px;
+            margin: 16px 0;
+            border-radius: 12px;
+            border: 1px solid;
+        }
+        
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .color-sample {
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>文字對比度測試</h1>
+        
+        <button class="toggle-btn" onclick="toggleDarkMode()">
+            <span id="mode-text">切換到暗黑模式</span>
+        </button>
+        
+        <div class="test-section">
+            <h2>標題文字測試</h2>
+            <div class="test-card bg-white border-gray-200">
+                <h1 class="text-gray-900">H1 標題 - 最重要的標題</h1>
+                <h2 class="text-gray-800">H2 標題 - 次要標題</h2>
+                <h3 class="text-gray-700">H3 標題 - 三級標題</h3>
+                <h4 class="text-gray-600">H4 標題 - 四級標題</h4>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>段落文字測試</h2>
+            <div class="test-card bg-gray-50 border-gray-100">
+                <p class="text-gray-900">這是最深色的段落文字 (text-gray-900)，應該有最高的對比度。</p>
+                <p class="text-gray-800">這是深色的段落文字 (text-gray-800)，適合正文內容。</p>
+                <p class="text-gray-700">這是中深色的段落文字 (text-gray-700)，適合副標題。</p>
+                <p class="text-gray-600">這是中等色的段落文字 (text-gray-600)，適合說明文字。</p>
+                <p class="text-gray-500">這是淺色的段落文字 (text-gray-500)，適合輔助信息。</p>
+                <p class="text-gray-400">這是很淺的段落文字 (text-gray-400)，適合次要信息。</p>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>彩色文字測試</h2>
+            <div class="color-grid">
+                <div class="color-sample bg-white border-gray-200">
+                    <p class="text-blue-600">藍色文字 (blue-600)</p>
+                    <p class="text-green-600">綠色文字 (green-600)</p>
+                    <p class="text-red-600">紅色文字 (red-600)</p>
+                    <p class="text-yellow-600">黃色文字 (yellow-600)</p>
+                </div>
+                <div class="color-sample bg-gray-100 border-gray-200">
+                    <p class="text-purple-600">紫色文字 (purple-600)</p>
+                    <p class="text-orange-600">橙色文字 (orange-600)</p>
+                    <p class="text-pink-600">粉色文字 (pink-600)</p>
+                    <p class="text-gray-600">灰色文字 (gray-600)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>鏈接和按鈕測試</h2>
+            <div class="test-card bg-white border-gray-200">
+                <p>這是一個包含 <a href="#" class="text-blue-600 hover:text-blue-700">鏈接文字</a> 的段落。</p>
+                <p>
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">主要按鈕</button>
+                    <button class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2">次要按鈕</button>
+                </p>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>表單元素測試</h2>
+            <div class="test-card bg-gray-50 border-gray-100">
+                <form>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">姓名</label>
+                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="請輸入姓名">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">郵箱</label>
+                        <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder="請輸入郵箱">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">留言</label>
+                        <textarea class="w-full px-3 py-2 border border-gray-300 rounded" rows="3" placeholder="請輸入留言"></textarea>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2>對比度評估</h2>
+            <div class="test-card bg-white border-gray-200">
+                <h3 class="text-gray-800 mb-4">WCAG 2.1 對比度標準</h3>
+                <ul class="text-gray-700 space-y-2">
+                    <li>• <strong>AA 級別</strong>：正常文字對比度至少 4.5:1</li>
+                    <li>• <strong>AA 級別</strong>：大文字對比度至少 3:1</li>
+                    <li>• <strong>AAA 級別</strong>：正常文字對比度至少 7:1</li>
+                    <li>• <strong>AAA 級別</strong>：大文字對比度至少 4.5:1</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let isDark = false;
+        
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const modeText = document.getElementById('mode-text');
+            
+            isDark = !isDark;
+            
+            if (isDark) {
+                html.classList.add('dark');
+                modeText.textContent = '切換到淺色模式';
+                console.log('切換到暗黑模式');
+            } else {
+                html.classList.remove('dark');
+                modeText.textContent = '切換到暗黑模式';
+                console.log('切換到淺色模式');
+            }
+            
+            console.log('當前 HTML 類:', html.className);
+        }
+        
+        // 初始化
+        console.log('對比度測試頁面載入完成');
+        console.log('當前 HTML 類:', document.documentElement.className);
+    </script>
+</body>
+</html>

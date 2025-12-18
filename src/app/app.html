@@ -1,10 +1,10 @@
 <!-- 響應式布局 -->
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
 
 <!-- 手機版和平板：頂部導航 + 側邊選單 -->
 <div class="block lg:hidden">
   <!-- 頂部導航欄 -->
-  <header class="bg-white shadow-lg border-b sticky top-0 z-30">
+  <header class="bg-white dark:bg-gray-800 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-30 transition-colors duration-200">
     <div class="px-4 py-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-3">
@@ -12,24 +12,30 @@
             鋒
           </div>
           <div>
-            <h1 class="text-base font-bold text-gray-800">鋒兄Angular資訊管理</h1>
-            <p class="text-xs text-gray-500">智能管理系統 v2.0</p>
+            <h1 class="text-base font-bold text-gray-800 dark:text-gray-100">鋒兄Angular資訊管理</h1>
+            <p class="text-xs text-gray-500 dark:text-gray-400">智能管理系統 v2.0</p>
           </div>
         </div>
-        <button 
-          type="button"
-          (click)="toggleMobileMenu()" 
-          class="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all w-10 h-10 flex items-center justify-center shadow-md">
-          @if (showMobileMenu()) {
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          } @else {
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          }
-        </button>
+        <div class="flex items-center space-x-2">
+          <!-- 主題切換按鈕（手機版） -->
+          <div class="lg:hidden">
+            <app-theme-toggle></app-theme-toggle>
+          </div>
+          <button 
+            type="button"
+            (click)="toggleMobileMenu()" 
+            class="p-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all w-10 h-10 flex items-center justify-center shadow-md">
+            @if (showMobileMenu()) {
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            } @else {
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            }
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -44,37 +50,37 @@
 
   <!-- 側邊選單 -->
   <div 
-    class="fixed top-0 left-0 h-full w-80 bg-white shadow-2xl z-50 transform transition-transform duration-300 overflow-y-auto"
+    class="fixed top-0 left-0 h-full w-80 bg-white dark:bg-gray-800 shadow-2xl z-50 transform transition-all duration-300 overflow-y-auto"
     [class.translate-x-0]="showMobileMenu()"
     [class.-translate-x-full]="!showMobileMenu()">
     
     <div class="p-6">
       <!-- Logo 區域 -->
-      <div class="flex items-center mb-6 pb-4 border-b border-gray-100">
+      <div class="flex items-center mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
         <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
           鋒
         </div>
         <div class="ml-3">
-          <h1 class="text-lg font-bold text-gray-800">鋒兄Angular</h1>
-          <h2 class="text-base font-semibold text-gray-700">資訊管理系統</h2>
-          <p class="text-xs text-gray-500">鋒兄AI • v2.0</p>
+          <h1 class="text-lg font-bold text-gray-800 dark:text-gray-100">鋒兄Angular</h1>
+          <h2 class="text-base font-semibold text-gray-700 dark:text-gray-200">資訊管理系統</h2>
+          <p class="text-xs text-gray-500 dark:text-gray-400">鋒兄AI • v2.0</p>
         </div>
       </div>
 
       <!-- 導航選單 -->
       <nav class="space-y-2">
-        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 px-3">主要功能</div>
+        <div class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-3 px-3">主要功能</div>
         
         <a routerLink="/home" 
            (click)="closeMobileMenu()"
            routerLinkActive="bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg" 
-           class="group w-full flex items-center px-3 py-3 text-gray-700 rounded-xl hover:bg-blue-50 transition-all">
-          <div class="w-10 h-10 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center mr-3">
+           class="group w-full flex items-center px-3 py-3 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-700 transition-all">
+          <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 flex items-center justify-center mr-3">
             <span class="text-xl">🏠</span>
           </div>
           <div>
             <span class="font-medium text-sm block">首頁</span>
-            <p class="text-xs text-gray-500">系統總覽</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400">系統總覽</p>
           </div>
         </a>
         
@@ -183,32 +189,38 @@
 <!-- 桌面版：左側導航 + 右側內容 -->
 <div class="hidden lg:flex min-h-screen relative">
   <!-- 左側選單 -->
-  <aside class="sidebar bg-white shadow-xl h-screen w-56 lg:w-60 xl:w-64 2xl:w-72 fixed left-0 top-0 z-10 border-r border-gray-200 overflow-y-auto flex-shrink-0">
+  <aside class="sidebar bg-white dark:bg-gray-800 shadow-xl h-screen w-56 lg:w-60 xl:w-64 2xl:w-72 fixed left-0 top-0 z-10 border-r border-gray-200 dark:border-gray-700 overflow-y-auto flex-shrink-0 transition-colors duration-200">
     <div class="p-4 lg:p-5 xl:p-6 pb-24">
       <!-- Logo 區域 -->
-      <div class="flex items-center mb-4 lg:mb-6 xl:mb-8 pb-3 lg:pb-4 xl:pb-5 border-b border-gray-100">
-        <div class="w-10 h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-base lg:text-lg shadow-lg flex-shrink-0">
-          鋒
+      <div class="mb-6 lg:mb-8 xl:mb-10 pb-4 lg:pb-5 xl:pb-6 border-b border-gray-100 dark:border-gray-700">
+        <!-- 上方：Logo 和標題 -->
+        <div class="flex items-start mb-3">
+          <div class="w-10 h-10 lg:w-11 lg:h-11 xl:w-12 xl:h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-base lg:text-lg shadow-lg flex-shrink-0">
+            鋒
+          </div>
+          <div class="ml-2 lg:ml-3 xl:ml-4 flex-1">
+            <h1 class="text-base lg:text-lg xl:text-xl font-bold text-gray-800 dark:text-gray-100 leading-tight break-words">鋒兄Angular資訊管理系統</h1>
+            <p class="text-xs lg:text-sm text-gray-500 dark:text-gray-400 mt-0.5">鋒兄AI • v2.0</p>
+          </div>
         </div>
-        <div class="ml-2 lg:ml-3 xl:ml-4 min-w-0">
-          <h1 class="text-base lg:text-lg xl:text-xl font-bold text-gray-800 leading-tight truncate">鋒兄Angular</h1>
-          <h2 class="text-sm lg:text-base xl:text-lg font-semibold text-gray-700 truncate">資訊管理系統</h2>
-          <p class="text-xs lg:text-sm text-gray-500 mt-0.5">鋒兄AI • v2.0</p>
+        <!-- 下方：主題切換按鈕 -->
+        <div class="flex justify-end">
+          <app-theme-toggle></app-theme-toggle>
         </div>
       </div>
       
       <!-- 導航選單 -->
       <nav class="space-y-1.5 lg:space-y-2 xl:space-y-3">
-        <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 lg:mb-3 px-2 lg:px-3">主要功能</div>
+        <div class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2 lg:mb-3 px-2 lg:px-3">主要功能</div>
         
         <a routerLink="/home" routerLinkActive="bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg" 
-           class="group w-full flex items-center px-2 lg:px-3 xl:px-4 py-2 lg:py-3 xl:py-4 text-gray-700 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-700 transition-all duration-300 hover:shadow-md">
-          <div class="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-lg bg-blue-100 group-hover:bg-blue-200 flex items-center justify-center mr-2 lg:mr-3 xl:mr-4 transition-colors flex-shrink-0">
+           class="group w-full flex items-center px-2 lg:px-3 xl:px-4 py-2 lg:py-3 xl:py-4 text-gray-700 dark:text-gray-300 rounded-xl hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 dark:hover:from-gray-700 dark:hover:to-gray-600 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 hover:shadow-md">
+          <div class="w-8 h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-lg bg-blue-100 dark:bg-blue-900 group-hover:bg-blue-200 dark:group-hover:bg-blue-800 flex items-center justify-center mr-2 lg:mr-3 xl:mr-4 transition-colors flex-shrink-0">
             <span class="text-base lg:text-lg xl:text-xl">🏠</span>
           </div>
           <div class="min-w-0">
             <span class="font-medium text-sm lg:text-base block truncate">首頁</span>
-            <p class="text-xs text-gray-500 group-hover:text-blue-600 truncate">系統總覽</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">系統總覽</p>
           </div>
         </a>
         
@@ -297,7 +309,7 @@
   </aside>
   
   <!-- 右側內容區域 -->
-  <main class="flex-1 ml-56 lg:ml-60 xl:ml-64 2xl:ml-72 bg-gray-50 min-h-screen">
+  <main class="flex-1 ml-56 lg:ml-60 xl:ml-64 2xl:ml-72 bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-200">
     <!-- 頂部裝飾條 -->
     <div class="h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
     
@@ -310,10 +322,13 @@
 
 <!-- 共用的 router-outlet - 放在最外層 -->
 <div class="fixed inset-0 pointer-events-none">
-  <div class="h-full bg-gray-50 lg:ml-56 xl:ml-60 2xl:ml-72 pointer-events-auto overflow-y-auto">
+  <div class="h-full bg-gray-50 dark:bg-gray-900 lg:ml-56 xl:ml-60 2xl:ml-72 pointer-events-auto overflow-y-auto transition-colors duration-200">
     <div class="p-4 lg:p-6 xl:p-8 min-h-full">
       <router-outlet />
     </div>
   </div>
 </div>
+
+<!-- 全局滾動按鈕 -->
+<app-scroll-buttons></app-scroll-buttons>
 </div>

@@ -2,6 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 暗黑模式樣式 - 優化對比度 */
+html.dark {
+  /* 背景色 - 使用更深的顏色提高對比度 */
+  .bg-gray-50 { background-color: #0f172a !important; } /* slate-900 */
+  .bg-white { background-color: #1e293b !important; }   /* slate-800 */
+  .bg-gray-100 { background-color: #334155 !important; } /* slate-700 */
+  .bg-gray-200 { background-color: #475569 !important; } /* slate-600 */
+  
+  /* 文字顏色 - 提高對比度和可讀性 */
+  .text-gray-900 { color: #f8fafc !important; } /* slate-50 - 最高對比度 */
+  .text-gray-800 { color: #f1f5f9 !important; } /* slate-100 */
+  .text-gray-700 { color: #e2e8f0 !important; } /* slate-200 */
+  .text-gray-600 { color: #cbd5e1 !important; } /* slate-300 */
+  .text-gray-500 { color: #94a3b8 !important; } /* slate-400 */
+  .text-gray-400 { color: #64748b !important; } /* slate-500 */
+  
+  /* 邊框顏色 */
+  .border-gray-200 { border-color: #475569 !important; } /* slate-600 */
+  .border-gray-100 { border-color: #64748b !important; } /* slate-500 */
+  .border-gray-300 { border-color: #334155 !important; } /* slate-700 */
+  
+  /* 懸停效果 - 更明顯的視覺反饋 */
+  .hover\:bg-gray-50:hover { background-color: #334155 !important; }
+  .hover\:bg-gray-100:hover { background-color: #475569 !important; }
+  .hover\:bg-gray-200:hover { background-color: #64748b !important; }
+  .hover\:bg-blue-50:hover { background-color: #1e40af !important; }
+  .hover\:bg-green-50:hover { background-color: #166534 !important; }
+  .hover\:bg-red-50:hover { background-color: #991b1b !important; }
+  .hover\:bg-purple-50:hover { background-color: #7c3aed !important; }
+  .hover\:bg-orange-50:hover { background-color: #c2410c !important; }
+  .hover\:bg-pink-50:hover { background-color: #be185d !important; }
+  .hover\:bg-indigo-50:hover { background-color: #4338ca !important; }
+  .hover\:bg-yellow-50:hover { background-color: #ca8a04 !important; }
+  
+  /* 特殊文字顏色 - 確保在暗黑背景上可見 */
+  .text-blue-600 { color: #60a5fa !important; }   /* blue-400 */
+  .text-green-600 { color: #4ade80 !important; }  /* green-400 */
+  .text-red-600 { color: #f87171 !important; }    /* red-400 */
+  .text-yellow-600 { color: #facc15 !important; } /* yellow-400 */
+  .text-purple-600 { color: #a78bfa !important; } /* purple-400 */
+  .text-orange-600 { color: #fb923c !important; } /* orange-400 */
+  .text-pink-600 { color: #f472b6 !important; }   /* pink-400 */
+  
+  /* 懸停文字顏色 */
+  .hover\:text-blue-700:hover { color: #93c5fd !important; }   /* blue-300 */
+  .hover\:text-green-600:hover { color: #86efac !important; }  /* green-300 */
+  .hover\:text-blue-600:hover { color: #93c5fd !important; }   /* blue-300 */
+  
+  /* 陰影效果 - 暗黑模式下的陰影 */
+  .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important; }
+  .shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.3) !important; }
+  .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3) !important; }
+  .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3) !important; }
+  .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important; }
+  .shadow-2xl { box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important; }
+}
+
 /* 全局樣式 */
 * {
   margin: 0;
@@ -11,37 +68,106 @@
 
 body {
   font-family: 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
-  background-color: #ffffff;
-  color: #1f2937 !important; /* 确保深色文本 */
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
-/* 强制确保所有文本元素可见 */
+/* 淺色模式 */
+body:not(.dark) {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+/* 暗黑模式 */
+body.dark,
+html.dark body {
+  background-color: #111827;
+  color: #f3f4f6;
+}
+
+/* 確保文本元素繼承顏色 */
 * {
   color: inherit;
 }
 
-/* 确保主要内容区域文本可见 */
+/* 主要內容區域 */
 main, .main-content, router-outlet {
-  color: #1f2937 !important;
+  color: inherit;
 }
 
-/* 确保卡片和容器内文本可见 */
+/* 移除強制顏色設置，讓 Tailwind 的 dark: 類生效 */
 .bg-white, .bg-gray-50, .bg-gray-100, .bg-opacity-95 {
-  color: #1f2937 !important;
+  color: inherit;
 }
 
-/* 确保所有文本标签可见 */
+/* 文本標籤 */
 p, span, div, h1, h2, h3, h4, h5, h6, label, a {
-  color: inherit !important;
+  color: inherit;
 }
 
-/* 特殊情况：确保浅色背景上的文本 */
-.text-gray-600, .text-gray-700, .text-gray-800 {
-  color: #374151 !important;
-}
-
-.text-gray-500 {
-  color: #6b7280 !important;
+/* 暗黑模式下的特殊文字對比度優化 */
+html.dark {
+  /* 確保標題文字有足夠對比度 */
+  h1, h2, h3, h4, h5, h6 {
+    color: #f8fafc !important; /* slate-50 */
+  }
+  
+  /* 確保段落文字可讀性 */
+  p {
+    color: #e2e8f0 !important; /* slate-200 */
+  }
+  
+  /* 確保鏈接文字可見 */
+  a {
+    color: #60a5fa !important; /* blue-400 */
+  }
+  
+  a:hover {
+    color: #93c5fd !important; /* blue-300 */
+  }
+  
+  /* 表單標籤 */
+  label {
+    color: #cbd5e1 !important; /* slate-300 */
+  }
+  
+  /* 輸入框 */
+  input, textarea, select {
+    background-color: #334155 !important; /* slate-700 */
+    color: #f1f5f9 !important; /* slate-100 */
+    border-color: #64748b !important; /* slate-500 */
+  }
+  
+  input:focus, textarea:focus, select:focus {
+    border-color: #60a5fa !important; /* blue-400 */
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1) !important;
+  }
+  
+  /* 按鈕文字 */
+  button {
+    color: inherit;
+  }
+  
+  /* 導航項目 */
+  nav a {
+    color: #cbd5e1 !important; /* slate-300 */
+  }
+  
+  nav a:hover {
+    color: #f1f5f9 !important; /* slate-100 */
+  }
+  
+  /* 卡片內容 */
+  .bg-white p,
+  .bg-gray-50 p,
+  .bg-gray-100 p {
+    color: #e2e8f0 !important; /* slate-200 */
+  }
+  
+  .bg-white h1, .bg-white h2, .bg-white h3,
+  .bg-gray-50 h1, .bg-gray-50 h2, .bg-gray-50 h3,
+  .bg-gray-100 h1, .bg-gray-100 h2, .bg-gray-100 h3 {
+    color: #f8fafc !important; /* slate-50 */
+  }
 }
 
 /* 中文字體優化 */
@@ -54,6 +180,7 @@ p, span, div, h1, h2, h3, h4, h5, h6, label, a {
   width: 6px;
 }
 
+/* 淺色模式滾動條 */
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
@@ -65,6 +192,20 @@ p, span, div, h1, h2, h3, h4, h5, h6, label, a {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* 暗黑模式滾動條 */
+html.dark ::-webkit-scrollbar-track {
+  background: #374151;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 3px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
 @import "tailwindcss";

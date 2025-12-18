@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>暗黑模式測試</title>
+    <link rel="stylesheet" href="dist/angularkiro20251217/styles-CCHBC3JB.css">
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', 'PingFang TC', 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .toggle-btn {
+            padding: 10px 20px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        
+        .test-card {
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>暗黑模式測試</h1>
+        
+        <button class="toggle-btn" onclick="toggleDarkMode()">
+            切換暗黑模式
+        </button>
+        
+        <div class="test-card bg-white border-gray-200">
+            <h2 class="text-gray-800">測試卡片 1</h2>
+            <p class="text-gray-600">這是一個測試卡片，用來驗證暗黑模式是否正常工作。</p>
+        </div>
+        
+        <div class="test-card bg-gray-50 border-gray-100">
+            <h2 class="text-gray-700">測試卡片 2</h2>
+            <p class="text-gray-500">這是另一個測試卡片，背景色為 gray-50。</p>
+        </div>
+        
+        <div class="test-card bg-gray-100 border-gray-200">
+            <h2 class="text-gray-900">測試卡片 3</h2>
+            <p class="text-gray-400">這是第三個測試卡片，背景色為 gray-100。</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            
+            if (isDark) {
+                html.classList.remove('dark');
+                console.log('切換到淺色模式');
+            } else {
+                html.classList.add('dark');
+                console.log('切換到暗黑模式');
+            }
+            
+            console.log('當前 HTML 類:', html.className);
+        }
+        
+        // 初始化
+        console.log('頁面載入完成');
+        console.log('當前 HTML 類:', document.documentElement.className);
+    </script>
+</body>
+</html>
