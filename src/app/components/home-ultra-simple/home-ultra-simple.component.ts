@@ -10,12 +10,12 @@ import { CommonModule } from '@angular/common';
       <!-- 版權資訊區域 -->
       <div class="bg-gradient-to-r from-gray-800 to-gray-900 text-white p-6 rounded-lg shadow-lg">
         <div class="text-center">
-          <h1 class="text-2xl font-bold mb-3">鋒兄塗哥公關資訊©</h1>
-          <p class="text-lg mb-2">版權所有 2025～2125</p>
-          <div class="flex flex-wrap justify-center gap-4 text-sm">
+          <h1 class="text-2xl font-bold mb-3">鋒兄塗哥公關資訊© 版權所有 2025～2125</h1>
+          <div class="flex flex-wrap justify-center gap-3 text-sm mt-4">
             <span class="bg-blue-600 px-3 py-1 rounded-full">前端使用 Angular(Material)</span>
-            <span class="bg-green-600 px-3 py-1 rounded-full">後端使用 NNhost</span>
+            <span class="bg-green-600 px-3 py-1 rounded-full">後端使用 Nhost</span>
             <span class="bg-orange-600 px-3 py-1 rounded-full">網頁存放於 CloudFlare</span>
+            <span class="bg-purple-600 px-3 py-1 rounded-full">影片存放於 Cloudflare R2</span>
           </div>
         </div>
       </div>
