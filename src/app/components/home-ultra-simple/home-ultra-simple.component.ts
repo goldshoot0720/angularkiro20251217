@@ -107,11 +107,6 @@ import { CommonModule } from '@angular/common';
           <p class="text-gray-600">觀看系統介紹和教學影片</p>
         </div>
         <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-          <div class="text-4xl mb-4">📱</div>
-          <h3 class="font-bold text-lg mb-2">響應式展示</h3>
-          <p class="text-gray-600">測試不同裝置的顯示效果</p>
-        </div>
-        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
           <div class="text-4xl mb-4">ℹ️</div>
           <h3 class="font-bold text-lg mb-2">關於我們</h3>
           <p class="text-gray-600">了解系統資訊和開發團隊</p>

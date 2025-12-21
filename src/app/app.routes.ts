@@ -10,7 +10,6 @@ import { FoodManagementComponent } from './components/food-management/food-manag
 import { SubscriptionManagementComponent } from './components/subscription-management/subscription-management.component';
 import { VideoIntroComponent } from './components/video-intro/video-intro.component';
 import { AboutComponent } from './components/about/about.component';
-import { ResponsiveDemoComponent } from './components/responsive-demo/responsive-demo.component';
 import { SimpleTestComponent } from './components/simple-test/simple-test.component';
 import { ImageTestComponent } from './components/image-test/image-test.component';
 
@@ -24,7 +23,6 @@ export const routes: Routes = [
   { path: 'subscription-management', component: SubscriptionManagementComponent, title: '訂閱管理' },
   { path: 'video-intro', component: VideoIntroComponent, title: '影片介紹' },
   { path: 'about', component: AboutComponent, title: '關於我們' },
-  { path: 'responsive-demo', component: ResponsiveDemoComponent, title: '響應式展示' },
   { path: 'simple-test', component: SimpleTestComponent, title: '簡單測試' },
   { path: 'image-test', component: ImageTestComponent, title: '圖片測試' },
   { path: '**', redirectTo: '/home' }
